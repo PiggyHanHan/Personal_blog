@@ -7,12 +7,16 @@
   黄昏 17:00–19:59   →  frame-dusk.jpg   +  video-dusk.mp4
   夜晚 20:00–04:59   →  frame-night.jpg  +  video-night.mp4
 
-每一组都是一对：一张第一帧静态图 + 一个约 1 秒的视频。
+每一组都是一对：一张第一帧静态图 + 一个视频（约 1–3 秒）。
+
+当前开屏方式：视频 cover 铺满整个屏幕（高清录屏直接全屏展示），
+不需要额外的背景图素材（bg-inner / bg-side 那些都不用准备了）。
 
 要求：
 - 图片格式：.jpg / .png / .webp 都可以（改 components/IntroOverlay.tsx 里的路径即可）
 - 视频格式：.mp4 / .webm 都可以
 - 四组建议都放齐；缺了哪组，那个时段进入时就会直接跳过开幕
 - 视频画面最好和第一帧图一致，这样静态图和视频之间没有跳跃感
+- 分辨率越高越清晰（推荐 1920×1080 或更高）
 
-想调整时间段划分？改 components/IntroOverlay.tsx 里 getPeriod() 函数即可。
+想调整时间段划分？改 lib/period.ts 里 getPeriod() 函数即可。

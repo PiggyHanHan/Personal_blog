@@ -72,8 +72,8 @@ export default function IntroOverlay() {
   // 素材缺失/加载失败时直接跳过开幕；淡出完成后彻底卸载
   if (failed || gone) return null;
 
-  // 新款实验：夜晚时段用"全屏横铺"（视频 cover 铺满整屏，看高清录屏糊不糊）
-  const isFullscreen = period === "night";
+  // 开屏统一用"cover 全屏横铺"（高清录屏直接铺满整屏，不再用竖屏舞台）
+  const isFullscreen = true;
 
   return (
     <div
