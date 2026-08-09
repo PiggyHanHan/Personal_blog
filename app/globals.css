@@ -1,15 +1,12 @@
 /* ============================================================
-   全局样式 —— 竖屏居中布局 + 原神风格（进行中）
+   全局样式 —— 开屏（全屏视频）+ 博客（全宽白底）
    ============================================================ */
 
 * {
   box-sizing: border-box;
 }
 
-/* ---------- 两侧天空背景：用对应时段的第一帧图 CSS 虚化 ----------
-   由 SkyBackground 组件按时段切换 class，自动虚化第一帧：
-   frame-dawn.jpg / frame-day.jpg / frame-dusk.jpg / frame-night.jpg
-   没放素材时显示 background-color 兜底。 */
+/* ---------- 基础排版 ---------- */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -17,10 +14,8 @@ body {
   font-size: 16px;
   line-height: 1.8;
   color: #111;
-  background: #fff; /* 正常网站：白底铺满整个窗口 */
+  background: #fff; /* 博客：白底铺满整个窗口 */
 }
-
-/* 两侧天空背景：已移除（开屏用全屏视频，博客用全宽白底） */
 
 h1, h2, h3, h4 {
   line-height: 1.4;
@@ -34,7 +29,7 @@ a:hover {
   color: #b22222;
 }
 
-/* ---------- 博客正文：正常全宽网站（白底铺满，内容 1100px 居中） ---------- */
+/* ---------- 博客：正常全宽网站 ---------- */
 .site-shell {
   width: 100%;
   min-height: 100vh;
@@ -110,11 +105,7 @@ article p {
 }
 
 /* ============================================================
-   开幕动画（原神"开门"）
-   - 全屏覆盖，只出现在开幕阶段
-   - 大背景：两侧是 page-bg 的虚化第一帧（透过透明 overlay 可见）
-   - 中央舞台：竖屏区域（max-width 480px），视频横边充满 + 上下背景图 B
-   - 大背景装饰：左侧提瓦特时钟、右侧派蒙
+   开屏动画（原神"开门"）：全屏视频 cover 铺满
    ============================================================ */
 
 .intro-overlay {
@@ -123,7 +114,7 @@ article p {
   z-index: 9999;
   cursor: pointer;
   overflow: hidden;
-  background-color: #16213e; /* 兜底：确保不透出底下博客 */
+  background-color: #000; /* 兜底：确保不透出底下博客 */
   transition: opacity 1s ease;
 }
 
@@ -133,7 +124,7 @@ article p {
   pointer-events: none;
 }
 
-/* 不透明大背景：用对应时段第一帧图 CSS 虚化，盖住底下博客 */
+/* 兜底背景：对应时段第一帧虚化（视频加载前不黑屏） */
 .intro-bg {
   position: absolute;
   inset: 0;
@@ -141,7 +132,7 @@ article p {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  background-color: #16213e;
+  background-color: #000;
   filter: blur(20px);
   transform: scale(1.15);
 }
@@ -158,79 +149,26 @@ article p {
   background-image: url("/intro/frame-night.jpg");
 }
 
-/* 中央竖屏舞台：480px 竖条居中，背景图 B（视频画面上下）按时段切换 */
-.intro-stage {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(480px, 100vw);
-  height: 100%;
-  z-index: 1; /* 盖在虚化大背景之上 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background:
-    url("/bg-inner.jpg") center / cover no-repeat,
-    linear-gradient(180deg, #0b0e2a 0%, #1a1a4e 100%);
-}
-.intro-overlay--dawn .intro-stage {
-  background:
-    url("/bg-inner-dawn.jpg") center / cover no-repeat,
-    linear-gradient(180deg, #2e3a5c 0%, #6a7ba8 60%, #c9a9a0 100%);
-}
-.intro-overlay--day .intro-stage {
-  background:
-    url("/bg-inner-day.jpg") center / cover no-repeat,
-    linear-gradient(180deg, #3f7ad8 0%, #7fb4f5 55%, #cfe6ff 100%);
-}
-.intro-overlay--dusk .intro-stage {
-  background:
-    url("/bg-inner-dusk.jpg") center / cover no-repeat,
-    linear-gradient(180deg, #3a2a52 0%, #a2545c 50%, #e8a95c 100%);
-}
-.intro-overlay--night .intro-stage {
-  background:
-    url("/bg-inner-night.jpg") center / cover no-repeat,
-    linear-gradient(180deg, #05091d 0%, #0a1030 45%, #101736 100%);
-}
-
-/* 画面容器：高度由第一帧图撑起，视频绝对定位覆盖在上面 */
-.intro-stage-media {
-  position: relative;
-  width: 100%;
-}
-
-/* 第一帧静态图：横边充满，高度按图片比例自动 */
-.intro-frame {
-  display: block;
-  width: 100%;
-  height: auto;
-  pointer-events: none;
-}
-
-/* 视频容器：铺满画面容器，播放中盖住图片 */
-.intro-video-wrap {
+/* 第一帧 / 视频：cover 全屏铺满 */
+.intro-frame,
+.intro-video {
   position: absolute;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
+  object-fit: cover;
   pointer-events: none;
 }
 
-.intro-video {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-}
-
-/* 提示文字：紧贴视频画面下方 */
+/* 提示文字：屏幕底部 */
 .intro-hint {
-  width: 100%;
-  margin: 1.25rem 0 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8%;
+  z-index: 2;
+  margin: 0;
   text-align: center;
   font-size: 1rem;
   letter-spacing: 0.2em;
@@ -246,173 +184,5 @@ article p {
   }
   50% {
     opacity: 0.35;
-  }
-}
-
-/* ============================================================
-   全屏横铺模式（新款实验）：视频 cover 铺满整个屏幕
-   只用于夜晚时段（高清录屏，看糊不糊）
-   ============================================================ */
-
-.intro-overlay--fullscreen .intro-stage {
-  left: 0;
-  transform: none;
-  width: 100%;
-  background: transparent; /* 不要竖条背景，让视频盖满全屏 */
-}
-
-.intro-overlay--fullscreen .intro-stage-media {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* 第一帧和视频都 cover 全屏铺满（横向铺满，上下按比例裁剪） */
-.intro-overlay--fullscreen .intro-frame {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.intro-overlay--fullscreen .intro-video {
-  object-fit: cover;
-}
-
-/* 全屏模式下提示文字回到屏幕底部 */
-.intro-overlay--fullscreen .intro-hint {
-  position: absolute;
-  bottom: 8%;
-  margin: 0;
-}
-
-/* 全屏模式下隐藏时钟和派蒙（视频盖满，避免遮挡） */
-.intro-overlay--fullscreen .teyvat-clock,
-.intro-overlay--fullscreen .paimon {
-  display: none;
-}
-
-/* ============================================================
-   大背景装饰：左侧提瓦特时钟 + 右侧派蒙（只出现在开幕）
-   ============================================================ */
-
-/* ---- 提瓦特时钟（简单版） ---- */
-.teyvat-clock {
-  position: absolute;
-  left: 4%;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  pointer-events: none;
-}
-
-.teyvat-clock-face {
-  width: 210px;
-  height: 210px;
-  border-radius: 50%;
-  border: 3px solid rgba(230, 200, 106, 0.65);
-  background: radial-gradient(
-    circle at 50% 40%,
-    rgba(16, 20, 48, 0.82) 0%,
-    rgba(10, 14, 40, 0.92) 70%
-  );
-  box-shadow:
-    0 0 40px rgba(230, 200, 106, 0.22),
-    inset 0 0 28px rgba(230, 200, 106, 0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.teyvat-clock-time {
-  font-size: 2.7rem;
-  font-weight: 600;
-  color: #e6c86a;
-  letter-spacing: 0.06em;
-  font-family: Georgia, "Times New Roman", serif;
-}
-
-.teyvat-clock-label {
-  font-size: 0.72rem;
-  color: rgba(230, 200, 106, 0.8);
-  letter-spacing: 0.34em;
-}
-
-/* ---- 派蒙（点击有反馈：弹跳 + 气泡） ---- */
-.paimon {
-  position: absolute;
-  right: 4%;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  cursor: pointer;
-}
-
-.paimon-bubble {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) scale(0.8);
-  background: rgba(255, 255, 255, 0.96);
-  color: #333;
-  border-radius: 12px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  pointer-events: none;
-}
-
-.paimon-bubble.show {
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
-}
-
-.paimon-img-wrap {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 42% 36%,
-    #fdf3d7 0%,
-    #f0c96a 60%,
-    #d9a94e 100%
-  );
-  border: 3px solid rgba(255, 255, 255, 0.65);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 4rem;
-}
-
-.paimon-placeholder {
-  line-height: 1;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-@keyframes paimon-bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-30px);
-  }
-}
-
-.paimon-bounce {
-  animation: paimon-bounce 0.5s ease;
-}
-
-/* 小屏幕（手机/窄窗口）隐藏大背景装饰，避免挡住竖屏舞台 */
-@media (max-width: 760px) {
-  .teyvat-clock,
-  .paimon {
-    display: none;
   }
 }
