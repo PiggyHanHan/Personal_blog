@@ -72,11 +72,14 @@ export default function IntroOverlay() {
   // 素材缺失/加载失败时直接跳过开幕；淡出完成后彻底卸载
   if (failed || gone) return null;
 
+  // 新款实验：夜晚时段用"全屏横铺"（视频 cover 铺满整屏，看高清录屏糊不糊）
+  const isFullscreen = period === "night";
+
   return (
     <div
       className={`intro-overlay intro-overlay--${period}${
-        phase === "done" ? " intro-overlay--done" : ""
-      }`}
+        isFullscreen ? " intro-overlay--fullscreen" : ""
+      }${phase === "done" ? " intro-overlay--done" : ""}`}
       onClick={handleClick}
       role="button"
       tabIndex={0}

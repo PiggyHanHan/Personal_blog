@@ -262,6 +262,49 @@ article p {
 }
 
 /* ============================================================
+   全屏横铺模式（新款实验）：视频 cover 铺满整个屏幕
+   只用于夜晚时段（高清录屏，看糊不糊）
+   ============================================================ */
+
+.intro-overlay--fullscreen .intro-stage {
+  left: 0;
+  transform: none;
+  width: 100%;
+  background: transparent; /* 不要竖条背景，让视频盖满全屏 */
+}
+
+.intro-overlay--fullscreen .intro-stage-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 第一帧和视频都 cover 全屏铺满（横向铺满，上下按比例裁剪） */
+.intro-overlay--fullscreen .intro-frame {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.intro-overlay--fullscreen .intro-video {
+  object-fit: cover;
+}
+
+/* 全屏模式下提示文字回到屏幕底部 */
+.intro-overlay--fullscreen .intro-hint {
+  position: absolute;
+  bottom: 8%;
+  margin: 0;
+}
+
+/* 全屏模式下隐藏时钟和派蒙（视频盖满，避免遮挡） */
+.intro-overlay--fullscreen .teyvat-clock,
+.intro-overlay--fullscreen .paimon {
+  display: none;
+}
+
+/* ============================================================
    大背景装饰：左侧提瓦特时钟 + 右侧派蒙（只出现在开幕）
    ============================================================ */
 
