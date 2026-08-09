@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import IntroOverlay from "@/components/IntroOverlay";
-import SkyBackground from "@/components/SkyBackground";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,7 +17,6 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
-        <SkyBackground />
         <div className="site-shell">
           <IntroOverlay />
           <header>

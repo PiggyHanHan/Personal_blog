@@ -17,34 +17,10 @@ body {
   font-size: 16px;
   line-height: 1.8;
   color: #111;
-  background-color: #16213e;
+  background: #fff; /* 正常网站：白底铺满整个窗口 */
 }
 
-/* 两侧天空背景层（fixed 在最底层）：
-   filter: blur() 做虚化，scale() 放大避免模糊后边缘露底 */
-.page-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-color: #16213e;
-  filter: blur(20px);
-  transform: scale(1.15);
-}
-.page-bg--dawn {
-  background-image: url("/intro/frame-dawn.jpg");
-}
-.page-bg--day {
-  background-image: url("/intro/frame-day.jpg");
-}
-.page-bg--dusk {
-  background-image: url("/intro/frame-dusk.jpg");
-}
-.page-bg--night {
-  background-image: url("/intro/frame-night.jpg");
-}
+/* 两侧天空背景：已移除（开屏用全屏视频，博客用全宽白底） */
 
 h1, h2, h3, h4 {
   line-height: 1.4;
@@ -58,21 +34,33 @@ a:hover {
   color: #b22222;
 }
 
-/* ---------- 博客正文：正常横屏网站布局（1100px 宽居中） ---------- */
+/* ---------- 博客正文：正常全宽网站（白底铺满，内容 1100px 居中） ---------- */
 .site-shell {
-  position: relative;
-  max-width: 1100px;
-  margin: 0 auto;
+  width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 1.5rem 1.75rem 4rem;
   background: #fff;
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.55);
+}
+
+/* 内容宽度（可读性），页面本身是全宽白色 */
+.site-shell main {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1.25rem;
+}
+
+.site-shell header nav,
+.site-shell footer > * {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 header {
+  width: 100%;
   border-bottom: 1px solid #ccc;
-  padding-bottom: 0.75rem;
+  padding: 0.75rem 1.75rem;
   margin-bottom: 2rem;
 }
 
@@ -94,7 +82,7 @@ header nav a:hover {
 
 footer {
   margin-top: 4rem;
-  padding-top: 1rem;
+  padding: 1rem 1.75rem;
   border-top: 1px solid #ccc;
   font-size: 0.875rem;
   color: #666;
