@@ -1044,3 +1044,28 @@ h1, h2, h3, h4 {
     grid-template-columns: 1fr;
   }
 }
+/* 项目卡片：重要性徽章（右上角） */
+.project-card {
+  position: relative;
+}
+.project-card__priority {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.95rem;
+  padding: 0.06rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+}
+.project-card__priority--core {
+  background: var(--crimson);
+  color: #fdfaf2;
+}
+.project-card__priority--high {
+  background: var(--gold-2);
+  color: #4a2a18;
+}
+.project-card__priority--low {
+  background: rgba(139, 125, 109, 0.18);
+  color: var(--ink-soft);
+}

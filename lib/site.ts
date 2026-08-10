@@ -112,26 +112,28 @@ export const EXPERIENCE = {
   ],
 };
 
-/** 项目类型：名称 / 地址（可选）/ 描述 / 状态（可选）/ 意义（可选） */
+/** 项目类型：名称 / 地址（可选）/ 描述 / 状态（可选）/ 意义（可选）/ 重要性 */
+export type ProjectPriority = "核心" | "重要" | "次要";
 export type Project = {
   name: string;
   url?: string;
   desc: string;
   status?: string;
   meaning?: string;
+  priority?: ProjectPriority;
 };
 
 /** 首页 · 精选项目 */
 export const FEATURED = {
   title: "精选项目",
   empty: "项目整理中，敬请期待。",
-  projects: [
-    {
+  projects: [    {
       name: "U-Net 航空影像语义分割（大创）",
       url: "https://github.com/PiggyHanHan/U-Net-for-Aerial-Imagery-Semantic-Segmentation",
       desc: "基于 U-Net 的航空影像语义分割，用于浮游植物无人机监测",
       status: "推进中 · 待立项",
       meaning: "核心学术项目",
+      priority: "核心",
     },
     {
       name: "农田无人机喷洒系统（Drone_Farm）",
@@ -139,9 +141,10 @@ export const FEATURED = {
       desc: "GD32H7 单片机上的农田无人机喷洒农药模拟系统",
       status: "已完成",
       meaning: "学校嵌入式课程实践（组队项目）",
+      priority: "次要",
     },
   ],
-};
+} satisfies { title: string; empty: string; projects: Project[] };
 
 /** 项目页：左右两列（学术项目 | 个人项目） */
 export const PROJECTS = {
@@ -157,6 +160,7 @@ export const PROJECTS = {
           desc: "基于 U-Net 的航空影像语义分割，用于浮游植物无人机监测。本地为完整开发工作区：模型训练、视觉处理、数值计算、客户端应用与论文写作。",
           status: "推进中 · 待立项",
           meaning: "核心学术项目",
+          priority: "核心",
         },
         {
           name: "农田无人机喷洒系统（Drone_Farm）",
@@ -164,6 +168,7 @@ export const PROJECTS = {
           desc: "运行在 GD32H7 嵌入式单片机上的农田无人机喷洒农药模拟系统：种植、虫害、无人机巡查喷洒、收获售卖、策略升级，LVGL 图形界面（队友见友链）。",
           status: "已完成",
           meaning: "学校嵌入式课程实践（组队项目）",
+          priority: "次要",
         },
       ],
     },
@@ -171,11 +176,20 @@ export const PROJECTS = {
       name: "个人项目",
       projects: [
         {
+          name: "Personal_blog（本博客）",
+          url: "https://github.com/PiggyHanHan/Personal_blog",
+          desc: "基于 Next.js 的个人博客，胡桃主题定制化：开屏动画、背景轮播、左侧导航、首页名片/技术栈/经历/项目/个性化。",
+          status: "持续更新",
+          meaning: "个人博客项目",
+          priority: "核心",
+        },
+        {
           name: "labelme",
           url: "https://github.com/PiggyHanHan/labelme",
           desc: "辅助大创项目的标注工具链",
           status: "可使用",
           meaning: "辅助大创项目的标注工作",
+          priority: "重要",
         },
         {
           name: "MCM-2026C（美赛）",
@@ -183,6 +197,7 @@ export const PROJECTS = {
           desc: "2026 数学建模美赛 C 题",
           status: "已结束",
           meaning: "体验美赛",
+          priority: "次要",
         },
         {
           name: "U-Net-Oxford-Pets",
@@ -190,6 +205,7 @@ export const PROJECTS = {
           desc: "Oxford Pets 多类分割练习，为大创做准备",
           status: "已完成",
           meaning: "深度学习练习 · 为大创做准备",
+          priority: "次要",
         },
         {
           name: "CIFAR-10",
@@ -197,6 +213,7 @@ export const PROJECTS = {
           desc: "基于 PyTorch 实现的 CIFAR-10 图像分类",
           status: "已完成",
           meaning: "深度学习练习 · 图像分类入门",
+          priority: "次要",
         },
         {
           name: "MNIST",
@@ -204,10 +221,15 @@ export const PROJECTS = {
           desc: "MNIST / EMNIST 学习 + 手写数字识别网站",
           status: "已完成",
           meaning: "深度学习练习 · 入门 + 识别网站",
+          priority: "次要",
         },
       ],
     },
   ],
+} satisfies {
+  title: string;
+  intro: string;
+  columns: { name: string; projects: Project[] }[];
 };
 
 /** 首页 · 个性化（游戏/歌手带喜欢程度，装备为 名称: 值） */
