@@ -87,7 +87,7 @@ h1, h2, h3, h4 {
   flex-direction: column;
   gap: 1.7rem;
   padding: 1.7rem 1.1rem 1.3rem;
-  background: rgba(250, 246, 236, 0.94);
+  background: rgba(250, 246, 236, 0.72);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border-right: 1px solid rgba(185, 146, 63, 0.3);
@@ -181,7 +181,7 @@ h1, h2, h3, h4 {
     padding: 0.65rem 1.1rem;
     border-right: none;
     border-bottom: 1px solid rgba(189, 154, 68, 0.4);
-    background: rgba(253, 250, 242, 0.94);
+    background: rgba(250, 246, 236, 0.72);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 100;
