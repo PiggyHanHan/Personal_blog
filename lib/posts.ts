@@ -31,7 +31,7 @@ export const posts: Post[] = [
   {
     slug: "hello-world",
     title: "你好，世界！",
-    date: "2026-01-01",
+    date: "2026-08-10",
     excerpt: "这是我的第一篇博客，先打个招呼。这个站还在建设中。",
     tags: ["杂谈", "建站"],
     content: [
