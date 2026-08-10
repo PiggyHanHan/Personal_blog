@@ -1,8 +1,9 @@
 import { FEATURED } from "@/lib/site";
 import Frame from "@/components/ui/Frame";
 import SectionTitle from "@/components/site/SectionTitle";
+import ProjectCard from "@/components/projects/ProjectCard";
 
-// 精选项目：项目卡片列表（待用户提供项目信息后填充）
+// 精选项目：项目卡片列表（完整信息：名称/地址/描述/状态/意义）
 export default function FeaturedProjects() {
   return (
     <Frame>
@@ -12,16 +13,7 @@ export default function FeaturedProjects() {
       ) : (
         <div className="project-list">
           {FEATURED.projects.map((p) => (
-            <a
-              key={p.name}
-              href={p.url}
-              target="_blank"
-              rel="noreferrer"
-              className="project-card"
-            >
-              <strong className="project-card__name">{p.name}</strong>
-              <span className="project-card__desc">{p.desc}</span>
-            </a>
+            <ProjectCard key={p.name} project={p} />
           ))}
         </div>
       )}

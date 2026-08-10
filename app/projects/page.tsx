@@ -1,4 +1,5 @@
 import { PROJECTS } from "@/lib/site";
+import ProjectCard from "@/components/projects/ProjectCard";
 
 export const metadata = { title: "项目" };
 
@@ -10,24 +11,19 @@ export default function ProjectsPage() {
         <p>{PROJECTS.intro}</p>
       </div>
 
-      {PROJECTS.projects.length === 0 ? (
-        <p className="empty">{PROJECTS.empty}</p>
-      ) : (
-        <div className="project-list">
-          {PROJECTS.projects.map((p) => (
-            <a
-              key={p.name}
-              href={p.url}
-              target="_blank"
-              rel="noreferrer"
-              className="project-card"
-            >
-              <strong className="project-card__name">{p.name}</strong>
-              <span className="project-card__desc">{p.desc}</span>
-            </a>
-          ))}
-        </div>
-      )}
+      {/* 左右两列：学术项目 | 个人项目 */}
+      <div className="projects-columns">
+        {PROJECTS.columns.map((col) => (
+          <section key={col.name} className="projects-col">
+            <h2 className="projects-col__title">{col.name}</h2>
+            <div className="projects-col__list">
+              {col.projects.map((p) => (
+                <ProjectCard key={p.name} project={p} />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
     </div>
   );
 }

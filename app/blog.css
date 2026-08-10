@@ -987,3 +987,60 @@ h1, h2, h3, h4 {
     grid-template-columns: 1fr;
   }
 }
+/* ============================================================
+   项目页：左右两列（学术项目 | 个人项目）
+   ============================================================ */
+.projects-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.projects-col__title {
+  margin: 0 0 0.9rem;
+  padding-left: 0.6rem;
+  border-left: 3px solid var(--gold-2);
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.projects-col__list {
+  display: grid;
+  gap: 1rem;
+}
+
+/* 项目卡片：名称 / 地址 / 描述 / 状态 / 意义 */
+.project-card__url {
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  word-break: break-all;
+}
+.project-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin-top: 0.15rem;
+}
+.project-card__status,
+.project-card__meaning {
+  font-size: 0.8rem;
+  color: var(--ink);
+}
+.project-card__status::before,
+.project-card__meaning::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--gold-line);
+  transform: rotate(45deg);
+  margin-right: 0.4rem;
+  vertical-align: 0.1em;
+}
+
+/* 窄屏：项目列单列 */
+@media (max-width: 860px) {
+  .projects-columns {
+    grid-template-columns: 1fr;
+  }
+}

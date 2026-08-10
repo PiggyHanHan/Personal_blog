@@ -112,20 +112,100 @@ export const EXPERIENCE = {
   ],
 };
 
+/** 项目类型：名称 / 地址（可选）/ 描述 / 状态（可选）/ 意义（可选） */
+export type Project = {
+  name: string;
+  url?: string;
+  desc: string;
+  status?: string;
+  meaning?: string;
+};
+
 /** 首页 · 精选项目 */
 export const FEATURED = {
   title: "精选项目",
   empty: "项目整理中，敬请期待。",
   projects: [
     {
-      name: "Phytoplankton_UAV_Project",
-      url: "https://github.com/PiggyHanHan/Phytoplankton_UAV_Project",
-      desc: "大创项目 · 本人核心学术成果，延续至今（GitHub 已设私有）",
+      name: "U-Net 航空影像语义分割（大创）",
+      url: "https://github.com/PiggyHanHan/U-Net-for-Aerial-Imagery-Semantic-Segmentation",
+      desc: "基于 U-Net 的航空影像语义分割，用于浮游植物无人机监测",
+      status: "推进中 · 待立项",
+      meaning: "核心学术项目",
     },
     {
-      name: "Drone_Farm",
+      name: "农田无人机喷洒系统（Drone_Farm）",
       url: "https://github.com/HuajiMX/Drone_Farm",
-      desc: "学校嵌入式课程项目",
+      desc: "GD32H7 单片机上的农田无人机喷洒农药模拟系统",
+      status: "已完成",
+      meaning: "学校嵌入式课程实践（组队项目）",
+    },
+  ],
+};
+
+/** 项目页：左右两列（学术项目 | 个人项目） */
+export const PROJECTS = {
+  title: "项目",
+  intro: "学术与个人项目一览。",
+  columns: [
+    {
+      name: "学术项目",
+      projects: [
+        {
+          name: "U-Net 航空影像语义分割（大创）",
+          url: "https://github.com/PiggyHanHan/U-Net-for-Aerial-Imagery-Semantic-Segmentation",
+          desc: "基于 U-Net 的航空影像语义分割，用于浮游植物无人机监测。本地为完整开发工作区：模型训练、视觉处理、数值计算、客户端应用与论文写作。",
+          status: "推进中 · 待立项",
+          meaning: "核心学术项目",
+        },
+        {
+          name: "农田无人机喷洒系统（Drone_Farm）",
+          url: "https://github.com/HuajiMX/Drone_Farm",
+          desc: "运行在 GD32H7 嵌入式单片机上的农田无人机喷洒农药模拟系统：种植、虫害、无人机巡查喷洒、收获售卖、策略升级，LVGL 图形界面（队友见友链）。",
+          status: "已完成",
+          meaning: "学校嵌入式课程实践（组队项目）",
+        },
+      ],
+    },
+    {
+      name: "个人项目",
+      projects: [
+        {
+          name: "labelme",
+          url: "https://github.com/PiggyHanHan/labelme",
+          desc: "辅助大创项目的标注工具链",
+          status: "可使用",
+          meaning: "辅助大创项目的标注工作",
+        },
+        {
+          name: "MCM-2026C（美赛）",
+          url: "https://github.com/PiggyHanHan/MCM-2026C",
+          desc: "2026 数学建模美赛 C 题",
+          status: "已结束",
+          meaning: "体验美赛",
+        },
+        {
+          name: "U-Net-Oxford-Pets",
+          url: "https://github.com/PiggyHanHan/U-Net-Oxford-Pets",
+          desc: "Oxford Pets 多类分割练习，为大创做准备",
+          status: "已完成",
+          meaning: "深度学习练习 · 为大创做准备",
+        },
+        {
+          name: "CIFAR-10",
+          url: "https://github.com/PiggyHanHan/CIFAR-10",
+          desc: "基于 PyTorch 实现的 CIFAR-10 图像分类",
+          status: "已完成",
+          meaning: "深度学习练习 · 图像分类入门",
+        },
+        {
+          name: "MNIST",
+          url: "https://github.com/PiggyHanHan/MNIST",
+          desc: "MNIST / EMNIST 学习 + 手写数字识别网站",
+          status: "已完成",
+          meaning: "深度学习练习 · 入门 + 识别网站",
+        },
+      ],
     },
   ],
 };
@@ -194,20 +274,6 @@ export const LINKS = {
       name: "[朋友的名字]",
       url: "https://example.com",
       desc: "[一句话介绍]",
-    },
-  ],
-};
-
-/** 项目页 */
-export const PROJECTS = {
-  title: "项目",
-  intro: "做过的一些东西。",
-  empty: "项目整理中。",
-  projects: [
-    {
-      name: "[项目名]",
-      url: "https://example.com",
-      desc: "[一句话描述]",
     },
   ],
 };
