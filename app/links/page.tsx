@@ -13,17 +13,30 @@ export default function LinksPage() {
       {LINKS.links.length === 0 ? (
         <p className="empty">{LINKS.empty}</p>
       ) : (
-        <div className="links-grid">
+        <div className="friend-list">
           {LINKS.links.map((l) => (
             <a
               key={l.name}
               href={l.url}
               target="_blank"
               rel="noreferrer"
-              className="link-card"
+              className="friend-card"
             >
-              <strong className="link-card__name">{l.name}</strong>
-              <span className="link-card__desc">{l.desc}</span>
+              <div className="friend-card__avatar">
+                {l.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={l.avatar} alt={`${l.name} 的头像`} />
+                ) : (
+                  <span className="friend-card__initial">
+                    {l.name.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div className="friend-card__body">
+                <strong className="friend-card__name">{l.name}</strong>
+                <span className="friend-card__url">{l.url}</span>
+              </div>
+              <span className="friend-card__note">（{l.note}）</span>
             </a>
           ))}
         </div>

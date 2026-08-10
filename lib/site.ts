@@ -286,16 +286,28 @@ export const POST = {
   next: "下一篇",
 };
 
-/** 友链页 */
+/** 友链页（note = 网站形式；avatar 可选，缺省用首字母头像） */
 export const LINKS = {
   title: "友链",
   intro: "我的朋友们。",
   empty: "友链建设中，敬请期待。",
   links: [
     {
-      name: "[朋友的名字]",
-      url: "https://example.com",
-      desc: "[一句话介绍]",
+      name: "Parrotools",
+      url: "https://parrotools.top/posts/hello-world-the-first-post",
+      note: "私人云服务器",
+    },
+    {
+      name: "HuajiMC",
+      url: "https://blog.huajimc.cn",
+      note: "公网",
+      avatar: "/friends/huajimc.ico",
+    },
+    {
+      name: "LemonNK",
+      url: "https://hualemon6.github.io/lemonnk-blog/",
+      note: "GitHub Pages",
+      avatar: "/friends/lemonnk.svg",
     },
   ],
 };
