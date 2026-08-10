@@ -1,6 +1,16 @@
+// ============================================================
 // 博客的文章数据。
-// 之后给博客"加设计"时，这个文件里的内容结构基本不用动，
-// 只会在视觉层（页面组件 + CSS）上做文章。
+// 加新文章：在 posts 数组里加一项，正文用块级结构（Block）。
+// ============================================================
+
+/** 正文的一个块。支持段落 / 小节标题 / 引用 / 列表 / 代码块 / 插图 */
+export type Block =
+  | { type: "heading"; level: 2 | 3; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "quote"; text: string }
+  | { type: "list"; ordered?: boolean; items: string[] }
+  | { type: "code"; lang?: string; code: string }
+  | { type: "image"; src: string; alt?: string; caption?: string };
 
 export type Post = {
   /** 文章链接标识，例如 hello-teyvat → /posts/hello-teyvat */
@@ -13,8 +23,8 @@ export type Post = {
   excerpt: string;
   /** 标签，例如 ["AI", "LLM"] */
   tags: string[];
-  /** 正文，每个字符串是一段文字 */
-  content: string[];
+  /** 正文：块级结构，见上方 Block 类型 */
+  content: Block[];
 };
 
 export const posts: Post[] = [
@@ -25,9 +35,24 @@ export const posts: Post[] = [
     excerpt: "这是我的第一篇博客，先打个招呼。这个站还在建设中。",
     tags: ["杂谈", "建站"],
     content: [
-      "你好，我是这个博客的主人。",
-      "这个站点目前还在建设中，具体会写些什么，等想清楚了再告诉大家。",
-      "如果你刚好路过，欢迎随便翻翻。",
+      { type: "paragraph", text: "你好，我是这个博客的主人。" },
+      {
+        type: "paragraph",
+        text: "这个站点目前还在建设中，具体会写些什么，等想清楚了再告诉大家。",
+      },
+      {
+        type: "quote",
+        text: "如果你刚好路过，欢迎随便翻翻。",
+      },
+      { type: "heading", level: 2, text: "接下来打算写什么" },
+      {
+        type: "list",
+        items: ["AI 学习笔记", "踩坑记录", "随笔杂谈"],
+      },
+      {
+        type: "paragraph",
+        text: "以上都还没开始，敬请期待。",
+      },
     ],
   },
 ];

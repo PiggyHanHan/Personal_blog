@@ -21,7 +21,14 @@ npm-debug.log*
 # typescript
 *.tsbuildinfo
 
-# playwright æˆªå›¾ç­‰ä¸´æ—¶äº§ç‰©
+# playwright æˆ„1¤7›¾ç­‰ä¸´æ—¶äº§ç‰„1¤7
 .playwright-mcp/
 
-# reasonix ¹¤¾ßÄÚ²¿Êý¾Ý.reasonix/
+# reasonix ¹¤¾ßÄÚ²¿Êý¾Ý
+.reasonix/
+
+# media assets (images/videos, too large for GitHub)
+/public/bg/
+/public/intro/
+/public/hutao/
+/public/border/

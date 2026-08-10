@@ -1,47 +1,55 @@
 import Link from "next/link";
+import { ABOUT } from "@/lib/site";
+import Frame from "@/components/ui/Frame";
+import SectionTitle from "@/components/site/SectionTitle";
 
 export const metadata = { title: "关于" };
 
 export default function AboutPage() {
+  const s = ABOUT.sections;
+
   return (
-    <>
-      <h1>关于我</h1>
+    <div className="page-stack">
+      <div className="page-head">
+        <h1>{ABOUT.title}</h1>
+        <p>{ABOUT.intro}</p>
+      </div>
 
-      <section>
-        <h2>自我介绍</h2>
-        <p>[待填写：自我介绍]</p>
-      </section>
+      <Frame className="about-section">
+        <SectionTitle title={s.profile} />
+        <p>{ABOUT.profile}</p>
+      </Frame>
 
-      <section>
-        <h2>我能做什么</h2>
+      <Frame className="about-section">
+        <SectionTitle title={s.skills} />
         <ul>
-          <li>[待填写：技能 1]</li>
-          <li>[待填写：技能 2]</li>
-          <li>[待填写：技能 3]</li>
+          {ABOUT.skills.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
         </ul>
-      </section>
+      </Frame>
 
-      <section>
-        <h2>这个博客在写什么</h2>
+      <Frame className="about-section">
+        <SectionTitle title={s.writing} />
         <ul>
-          <li>[待填写：文章方向 1]</li>
-          <li>[待填写：文章方向 2]</li>
-          <li>[待填写：文章方向 3]</li>
+          {ABOUT.writing.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
         </ul>
-      </section>
+      </Frame>
 
-      <section>
-        <h2>联系我</h2>
-        <p>
-          邮箱：[你的邮箱]
+      <Frame className="about-section">
+        <SectionTitle title={s.contact} />
+        <p className="about-contact">
+          邮箱：{ABOUT.contactEmail}
           <br />
-          GitHub：[你的 GitHub 链接]
+          GitHub：{ABOUT.contactGithub}
         </p>
-      </section>
+      </Frame>
 
-      <p>
-        <Link href="/posts">去看看文章 →</Link>
+      <p className="about-cta">
+        <Link href="/posts">{ABOUT.cta}</Link>
       </p>
-    </>
+    </div>
   );
 }
