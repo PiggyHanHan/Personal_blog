@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useBg } from "@/components/BgProvider";
-import { useIntroSounds } from "@/components/useIntroSounds";
+import { useBg } from "@/components/providers/BgProvider";
+import { useIntroSounds } from "@/components/hooks/useIntroSounds";
 
 // ============================================================
 // 开屏动画（胡桃 · 往生堂"开门"）

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useVolume } from "@/components/SoundProvider";
+import { useVolume } from "@/components/providers/SoundProvider";
 
 // ============================================================
 // 全局设置按钮：常驻左下角（开屏/博客页面都可见，z-index 高于开屏）

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { useVolume } from "@/components/SoundProvider";
+import { useVolume } from "@/components/providers/SoundProvider";
 
 // ============================================================
 // 开屏音效 + 第一屏胡桃录音 hook

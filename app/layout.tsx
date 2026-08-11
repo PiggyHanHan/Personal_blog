@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import fs from "node:fs";
 import path from "node:path";
-import IntroOverlay from "@/components/IntroOverlay";
-import BlogBackground from "@/components/BlogBackground";
-import BgProvider from "@/components/BgProvider";
-import SoundProvider from "@/components/SoundProvider";
-import SettingsButton from "@/components/SettingsButton";
+import IntroOverlay from "@/components/layout/IntroOverlay";
+import BlogBackground from "@/components/layout/BlogBackground";
+import BgProvider from "@/components/providers/BgProvider";
+import SoundProvider from "@/components/providers/SoundProvider";
+import SettingsButton from "@/components/layout/SettingsButton";
 import SiteSidebar from "@/components/site/SiteSidebar";
 import SiteFooter from "@/components/site/SiteFooter";
 import "./globals.css";

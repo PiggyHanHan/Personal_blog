@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useBg } from "@/components/BgProvider";
+import { useBg } from "@/components/providers/BgProvider";
 
 // ============================================================
 // 博客背景：渲染层

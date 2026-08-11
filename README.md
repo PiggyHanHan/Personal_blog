@@ -43,8 +43,14 @@ app/                    # 页面（Next.js App Router）
   about/page.tsx        # 关于页 /about
   globals.css           # 全局样式
 components/
-  IntroOverlay.tsx      # 开屏动画（往生堂"开门" → 白屏加载 → 进入博客）
-  BlogBackground.tsx    # 背景轮播（自动读取 public/bg/ 目录）
+  layout/               # 站点外壳：IntroOverlay 开屏动画、BlogBackground 背景轮播、SettingsButton 设置按钮
+  providers/            # 全局状态：BgProvider（背景）、SoundProvider（音量/音效）
+  hooks/                # 自定义 hook：useIntroSounds（开屏音效）
+  home/                 # 首页卡片：HeroCard / TechStack / QuestBoard / FeaturedProjects 等
+  post/                 # 文章页：PostBody / PostNav / PdfPreview / MobilePdfViewer（PDF 预览）
+  projects/             # 项目卡片 ProjectCard
+  site/                 # 站点布局：SiteSidebar / SiteFooter / SectionTitle / TabbedSections
+  ui/                   # 基础 UI：Frame / TagPill / ElementIcon
 content/
   posts/*.md           # ★ 文章源文件：加新文章就在这里新建 .md（见下文）
   projects.json        # ★ 项目数据：首页精选 + 项目页两列
@@ -53,10 +59,17 @@ lib/
   posts.ts              # 文章数据层：读取 content/posts/*.md
   markdown.tsx          # Markdown → Block 转换（行内格式渲染）
   content.ts            # 项目/友链读取层：读 content/*.json
+  site.ts               # 站点配置与页面数据（导航/关于/页脚等）
+types/                  # 全局类型声明（pdfjs-legacy.d.ts）
 public/
   hutao/                # 开屏素材：door/chibi/bg/vision 四张图（见 README.txt）
   bg/                   # 背景图：往这里丢图片就自动轮播
+  files/                # 附件（PDF 等）：往这里丢文件即可被文章链接引用
+  friends/              # 友链头像
   intro/                # （旧版视频开屏素材，已废弃，可删除）
+docs/
+  user/                 # 使用者指南：访问我的博客 / 启动服务器指南 / 内容更新指南
+  dev/                  # 开发文档：整体结构设计 / 导航栏与页面内容设计 / 开发备忘
 ```
 
 ## 怎么加一篇文章
