@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getAllPosts, getPostsGrouped } from "@/lib/posts";
 import { POSTS } from "@/lib/site";
 import QuestCard from "@/components/home/QuestCard";
@@ -5,18 +6,30 @@ import TabbedSections from "@/components/site/TabbedSections";
 
 export const metadata = { title: "文章" };
 
-export default async function PostsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ post?: string }>;
-}) {
-  const { post: postSlug } = await searchParams;
+export default function PostsPage() {
   const columns = getPostsGrouped();
 
-  // 从详情页返回时定位：找到正在读的文章，决定初始 tab 与滚动目标
-  const target = postSlug
-    ? getAllPosts().find((p) => p.slug === postSlug)
-    : undefined;
+  // slug → tab 名映射（"学术文章"/"个人文章"）。
+  // 纯静态数据，序列化传给客户端组件：由 TabbedSections 读取 ?post=<slug>
+  // 实现"从详情页返回时定位"，页面本身不依赖 searchParams，保持静态预渲染。
+  const slugToTabName: Record<string, string> = {};
+  for (const post of getAllPosts()) {
+    slugToTabName[post.slug] = `${post.category}文章`;
+  }
+
+  const tabs = columns.map((col) => ({
+    name: `${col.name}文章`,
+    content:
+      col.posts.length > 0 ? (
+        <div className="quest-board">
+          {col.posts.map((post) => (
+            <QuestCard key={post.slug} post={post} />
+          ))}
+        </div>
+      ) : (
+        <p className="empty">{POSTS.empty}</p>
+      ),
+  }));
 
   return (
     <div className="page-stack">
@@ -26,23 +39,10 @@ export default async function PostsPage({
       </div>
 
       {/* 顶部切换：学术文章 | 个人文章 */}
-      <TabbedSections
-        tabs={columns.map((col) => ({
-          name: `${col.name}文章`,
-          content:
-            col.posts.length > 0 ? (
-              <div className="quest-board">
-                {col.posts.map((post) => (
-                  <QuestCard key={post.slug} post={post} />
-                ))}
-              </div>
-            ) : (
-              <p className="empty">{POSTS.empty}</p>
-            ),
-        }))}
-        initialTabName={target ? `${target.category}文章` : undefined}
-        scrollToSlug={postSlug}
-      />
+      {/* Suspense 边界：客户端 useSearchParams 需要（Next.js 15 静态渲染要求） */}
+      <Suspense fallback={<p className="empty">加载中…</p>}>
+        <TabbedSections tabs={tabs} slugToTabName={slugToTabName} />
+      </Suspense>
     </div>
   );
 }

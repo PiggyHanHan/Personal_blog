@@ -29,6 +29,8 @@ import { useIntroSounds } from "@/components/hooks/useIntroSounds";
 // 音效 3 点位 + 录音约定见 使用中/音效、使用中/录音 下的 README.txt
 // ============================================================
 
+const INTRO_SEEN_KEY = "blog-intro-seen"; // 会话标记：同标签页只播一次开屏
+
 const ASSETS = {
   door: "/hutao/使用中/背景/door.png",
   chibi: "/hutao/使用中/小素材/chibi1.png",
@@ -143,8 +145,15 @@ export default function IntroOverlay() {
   const { play, playTogether, playRandomVoice, fadeOutVoice } = useIntroSounds();
   const prevPhaseRef = useRef<Phase | null>(null);
 
-  // 预览/测试辅助：URL 带 ?skipIntro=1 时挂载后立即移除开屏（正常访问不受影响）
+  // 预览/测试辅助 + 会话去重：
+  // - URL 带 ?skipIntro=1 时挂载后立即移除开屏（正常访问不受影响）
+  // - sessionStorage 记录"本标签页已看过开屏"：任何整页加载（刷新/网络
+  //   抖动导致的降级导航）都不会重播开屏，只有新开标签页/新会话才重播
   useEffect(() => {
+    if (sessionStorage.getItem(INTRO_SEEN_KEY) === "1") {
+      setGone(true);
+      return;
+    }
     if (new URLSearchParams(window.location.search).has("skipIntro")) {
       setGone(true);
     }
@@ -288,6 +297,7 @@ export default function IntroOverlay() {
     if (phase !== "done") return;
     // 系统"减弱动态效果"时直接跳过过渡
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      sessionStorage.setItem(INTRO_SEEN_KEY, "1");
       setGone(true);
       return;
     }
@@ -308,6 +318,7 @@ export default function IntroOverlay() {
       if (p < 1) {
         requestAnimationFrame(tick);
       } else {
+        sessionStorage.setItem(INTRO_SEEN_KEY, "1");
         setGone(true);
       }
     };

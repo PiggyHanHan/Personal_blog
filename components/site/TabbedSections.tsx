@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
 // 顶部切换：把内容按 tab 分组，一次只显示一组
@@ -8,18 +9,30 @@ import type { ReactNode } from "react";
 //
 // 可选定位：initialTabName 决定初始选中哪个 tab；scrollToSlug 对应卡片有
 // data-slug 属性，渲染后滚动到它并尽量居中（卡片比视口高时对齐顶部）。
+// 文章页额外支持 URL 定位：传 slugToTabName（slug → tab 名映射）后，
+// ?post=<slug> 会覆盖 initialTabName / scrollToSlug，从详情页返回时
+// 自动定位到正在读的那篇文章（优先级：URL > props）。
 export default function TabbedSections({
   tabs,
   initialTabName,
   scrollToSlug,
+  slugToTabName,
 }: {
   tabs: { name: string; content: ReactNode }[];
   initialTabName?: string;
   scrollToSlug?: string;
+  slugToTabName?: Record<string, string>;
 }) {
+  const searchParams = useSearchParams();
+  const urlSlug = searchParams.get("post");
+  const urlTabName =
+    urlSlug && slugToTabName ? slugToTabName[urlSlug] : undefined;
+  const resolvedTabName = urlTabName ?? initialTabName;
+  const resolvedScroll = urlSlug && slugToTabName ? urlSlug : scrollToSlug;
+
   const [active, setActive] = useState(() => {
-    if (initialTabName) {
-      const idx = tabs.findIndex((t) => t.name === initialTabName);
+    if (resolvedTabName) {
+      const idx = tabs.findIndex((t) => t.name === resolvedTabName);
       if (idx >= 0) return idx;
     }
     return 0;
@@ -27,12 +40,12 @@ export default function TabbedSections({
 
   // 从详情页返回：滚动到正在读的那篇文章卡片，尽量居中
   useEffect(() => {
-    if (!scrollToSlug) return;
+    if (!resolvedScroll) return;
     const el = document.querySelector<HTMLElement>(
-      `[data-slug="${scrollToSlug}"]`
+      `[data-slug="${resolvedScroll}"]`
     );
     if (el) el.scrollIntoView({ block: "center" });
-  }, [scrollToSlug, active]);
+  }, [resolvedScroll, active]);
 
   return (
     <div className="tabbed">
