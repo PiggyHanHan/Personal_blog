@@ -6,6 +6,12 @@ import Frame from "@/components/ui/Frame";
 import TagPill from "@/components/ui/TagPill";
 import PostBody from "@/components/post/PostBody";
 import PostNav from "@/components/post/PostNav";
+import PdfPreview from "@/components/post/PdfPreview";
+
+/** /files/xxx.pdf → /api/view/xxx.pdf（浏览器内联预览，不触发下载） */
+function toViewHref(pdf: string): string {
+  return `/api/view${pdf.replace(/^\/files/, "")}`;
+}
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
@@ -37,7 +43,10 @@ export default async function PostPage({
   return (
     <div className="page-stack">
       <Frame>
-        <Link href="/posts" className="post-back">
+        <Link
+          href={`/posts?post=${post.slug}`}
+          className="post-back"
+        >
           {POST.back}
         </Link>
         <header className="post-head">
@@ -51,6 +60,9 @@ export default async function PostPage({
             ))}
           </div>
         </header>
+
+        {post.pdf ? <PdfPreview src={toViewHref(post.pdf)} /> : null}
+
         <PostBody content={post.content} />
       </Frame>
 

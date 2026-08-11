@@ -441,6 +441,33 @@ h1, h2, h3, h4 {
   letter-spacing: 0.06em;
 }
 
+/* PDF 全文预览（frontmatter 配置 pdf 字段后显示） */
+.pdf-preview {
+  margin: 1.6rem 0 1.2rem;
+}
+.pdf-preview__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+.pdf-preview__label {
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+.pdf-preview__open:hover {
+  border-color: var(--gold-3);
+}
+.pdf-preview__frame {
+  width: 100%;
+  height: 72vh;
+  border: 1px solid rgba(189, 154, 68, 0.4);
+  border-radius: 10px;
+  background: #fff;
+}
+
 .post-body {
   margin-top: 1.4rem;
 }
@@ -448,6 +475,28 @@ h1, h2, h3, h4 {
   margin: 0.9rem 0;
   color: var(--ink);
   line-height: 1.95;
+}
+.post-body :not(pre) > code {
+  padding: 0.12em 0.38em;
+  border-radius: 4px;
+  background: rgba(189, 154, 68, 0.16);
+  color: var(--crimson);
+  font-family: "JetBrains Mono", Consolas, "Courier New", monospace;
+  font-size: 0.85em;
+}
+.post-body a {
+  color: var(--crimson);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.post-body a:hover {
+  color: var(--gold-3);
+}
+.post-body strong {
+  font-weight: 700;
+}
+.post-body del {
+  color: var(--ink-soft);
 }
 .post-body h2 {
   margin: 2rem 0 0.8rem;
@@ -988,22 +1037,8 @@ h1, h2, h3, h4 {
   }
 }
 /* ============================================================
-   项目页：左右两列（学术项目 | 个人项目）
+   项目页：卡片列表（顶部切换：学术项目 | 个人项目）
    ============================================================ */
-.projects-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-.projects-col__title {
-  margin: 0 0 0.9rem;
-  padding-left: 0.6rem;
-  border-left: 3px solid var(--gold-2);
-  font-size: 1.15rem;
-  letter-spacing: 0.1em;
-  color: var(--ink);
-}
 .projects-col__list {
   display: grid;
   gap: 1rem;
@@ -1038,12 +1073,6 @@ h1, h2, h3, h4 {
   vertical-align: 0.1em;
 }
 
-/* 窄屏：项目列单列 */
-@media (max-width: 860px) {
-  .projects-columns {
-    grid-template-columns: 1fr;
-  }
-}
 /* 项目卡片：重要性徽章（右上角） */
 .project-card {
   position: relative;
@@ -1136,4 +1165,104 @@ h1, h2, h3, h4 {
   font-size: 0.85rem;
   color: var(--ink);
   letter-spacing: 0.04em;
+}
+/* ============================================================
+   顶部切换（文章页：学术文章|个人文章；项目页：学术项目|个人项目）
+   ============================================================ */
+.tabbed__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+}
+.tabbed__tab {
+  padding: 0.45rem 1.25rem;
+  border: 1px solid rgba(189, 154, 68, 0.45);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.tabbed__tab:hover {
+  color: var(--crimson);
+  border-color: var(--gold-3);
+}
+.tabbed__tab--active {
+  background: var(--crimson);
+  color: #fdfaf2;
+  border-color: var(--crimson);
+  font-weight: 600;
+}
+
+/* PDF 预览操作区：桌面内嵌 iframe，手机改用按钮（手机浏览器不支持 iframe 内嵌 PDF） */
+.pdf-preview__actions {
+  display: flex;
+  gap: 0.6rem;
+}
+.pdf-preview__open {
+  padding: 0.45rem 1rem;
+  border: 1px solid rgba(189, 154, 68, 0.55);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+.pdf-preview__open:hover {
+  border-color: var(--gold-3);
+}
+
+/* 窄屏：操作栏纵向排列，按钮占满整行（iframe 由 PdfPreview 组件按视口决定是否渲染，手机不加载） */
+@media (max-width: 860px) {
+  .pdf-preview__bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+  .pdf-preview__actions {
+    width: 100%;
+  }
+  .pdf-preview__open {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   手机端 PDF：pdf.js canvas 渲染
+   ============================================================ */
+.mobile-pdf__status {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.05em;
+}
+.mobile-pdf__pages {
+  max-height: 70vh;
+  overflow-y: auto;
+  border: 1px solid rgba(189, 154, 68, 0.4);
+  border-radius: 10px;
+  background: #4a4a4a;
+  padding: 0.6rem 0.4rem;
+}
+.mobile-pdf__page {
+  display: block;
+  margin: 0 auto 0.7rem;
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.mobile-pdf__page:last-child {
+  margin-bottom: 0;
+}
+.mobile-pdf__error {
+  margin: 0;
+  padding: 1rem;
+  color: #f0e6d2;
+  font-size: 0.9rem;
+  line-height: 1.7;
 }

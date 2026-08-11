@@ -45,8 +45,14 @@ app/                    # 页面（Next.js App Router）
 components/
   IntroOverlay.tsx      # 开屏动画（往生堂"开门" → 白屏加载 → 进入博客）
   BlogBackground.tsx    # 背景轮播（自动读取 public/bg/ 目录）
+content/
+  posts/*.md           # ★ 文章源文件：加新文章就在这里新建 .md（见下文）
+  projects.json        # ★ 项目数据：首页精选 + 项目页两列
+  links.json           # ★ 友链数据
 lib/
-  posts.ts              # ★ 文章数据：加新文章就改这个文件
+  posts.ts              # 文章数据层：读取 content/posts/*.md
+  markdown.tsx          # Markdown → Block 转换（行内格式渲染）
+  content.ts            # 项目/友链读取层：读 content/*.json
 public/
   hutao/                # 开屏素材：door/chibi/bg/vision 四张图（见 README.txt）
   bg/                   # 背景图：往这里丢图片就自动轮播
@@ -55,20 +61,71 @@ public/
 
 ## 怎么加一篇文章
 
-打开 `lib/posts.ts`，在 `posts` 数组里加一项：
+在 `content/posts/` 下新建一个 Markdown 文件，文件头用 YAML frontmatter 写元信息，正文直接写 Markdown：
 
-```ts
-{
-  slug: "my-new-post",                 // 链接会是 /posts/my-new-post
-  title: "文章标题",
-  date: "2026-02-01",
-  excerpt: "列表页显示的摘要一句话",
-  tags: ["AI", "笔记"],
-  content: ["第一段文字", "第二段文字"], // 每个字符串是一段
-},
+````md
+---
+title: 文章标题
+slug: my-post            # 链接会是 /posts/my-post；必须英文，省略时用文件名
+date: 2026-02-01        # YYYY-MM-DD
+excerpt: 列表页显示的摘要一句话
+tags: [AI, 笔记]
+---
+
+这里是正文，支持 **粗体**、`行内代码`、[链接](https://example.com)、引用、列表、```代码块``` 等 Markdown 语法。
+
+## 小节标题
+
+第二段内容。
+````
+
+> **文件名可以用中文**（比如 `个人焦虑的剖析与总结.md`），但链接取决于 `slug`（或文件名）——**slug 必须是英文字母/数字/下划线/连字符**，中文 slug 会导致详情页 404。建议：文件名随意，slug 写英文。
+
+保存后刷新页面，新文章会自动出现在列表页；构建时会为每篇文章生成静态页面。
+
+## 怎么放 PDF / 附件文件（比如学术论文）
+
+把文件放进 `public/files/` 文件夹（没有就新建一个），正文里用链接语法指过去：
+
+```md
+## 论文
+
+[📄 下载《XXX》全文 PDF](/files/xxx.pdf)
 ```
 
-保存后刷新页面，新文章会自动出现在列表页和首页。
+- 访问地址就是文件在 `public/files/` 里的路径：`/files/xxx.pdf`
+- **中文文件名也可以**，比如 `/files/我的论文.pdf`
+- 点链接会在**新标签页**打开 PDF（用浏览器自带的阅读器），原文章页保留
+- 放文件不用改代码、不用重新构建，刷新页面即生效
+
+## 怎么加项目 / 友链
+
+编辑 `content/projects.json`（项目）或 `content/links.json`（友链）即可，**不用碰代码**。
+
+**加一个项目**：在 `projects.json` 的 `featured.projects`（首页精选）或 `projects.columns` 某一列的 `projects` 数组里，按下面格式加一项：
+
+```json
+{
+  "name": "项目名",
+  "url": "https://github.com/xxx/xxx",
+  "desc": "一句话描述",
+  "status": "已完成",
+  "meaning": "分类说明",
+  "priority": "核心"
+}
+```
+
+`priority` 可选：`核心` / `重要` / `次要`（影响卡片样式）；`url`、`status`、`meaning` 可省略。
+
+**加一个友链**：在 `links.json` 的 `links` 数组里加一项：
+
+```json
+{ "name": "昵称", "url": "https://example.com", "note": "备注", "avatar": "/friends/xxx.png" }
+```
+
+`note`、`avatar` 可省略（没有头像时显示首字母）。
+
+> JSON 注意：字段名和字符串用双引号、不能写注释、数组最后一个元素后面不能有多余逗号。改完保存后重新构建（`next build`）即可生效。
 
 ## 怎么加背景图
 

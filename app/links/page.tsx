@@ -1,20 +1,22 @@
-import { LINKS } from "@/lib/site";
+import { getLinks } from "@/lib/content";
 
 export const metadata = { title: "友链" };
 
 export default function LinksPage() {
+  const links = getLinks();
+
   return (
     <div className="page-stack">
       <div className="page-head">
-        <h1>{LINKS.title}</h1>
-        <p>{LINKS.intro}</p>
+        <h1>{links.title}</h1>
+        <p>{links.intro}</p>
       </div>
 
-      {LINKS.links.length === 0 ? (
-        <p className="empty">{LINKS.empty}</p>
+      {links.links.length === 0 ? (
+        <p className="empty">{links.empty}</p>
       ) : (
         <div className="friend-list">
-          {LINKS.links.map((l) => (
+          {links.links.map((l) => (
             <a
               key={l.name}
               href={l.url}

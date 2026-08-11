@@ -3,6 +3,7 @@ import TechStack from "@/components/home/TechStack";
 import ExperienceCard from "@/components/home/ExperienceCard";
 import FeaturedProjects from "@/components/home/FeaturedProjects";
 import InterestsCard from "@/components/home/InterestsCard";
+import { getFeaturedProjects } from "@/lib/content";
 
 export default function HomePage() {
   return (
@@ -16,8 +17,8 @@ export default function HomePage() {
       {/* 经历：时间线 */}
       <ExperienceCard />
 
-      {/* 精选项目 */}
-      <FeaturedProjects />
+      {/* 精选项目（数据来自 content/projects.json） */}
+      <FeaturedProjects featured={getFeaturedProjects()} />
 
       {/* 个性化：游戏 / 歌手 / 装备工具 */}
       <InterestsCard />

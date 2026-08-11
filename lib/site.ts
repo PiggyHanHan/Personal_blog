@@ -1,8 +1,8 @@
 // ============================================================
 // 站点文案 / 配置（集中管理）
 //
-// ★ 所有页面标题、区块标题、介绍文案、导航项、技术栈、经历、
-//   友链、项目数据都在这里改，组件无需动。
+// ★ 站点文案 / 个人资料 / 技术栈 / 经历 / 兴趣都在这里改，组件无需动。
+//   项目与友链数据不在代码里：见 content/projects.json 和 content/links.json。
 // ============================================================
 
 export const SITE = {
@@ -125,115 +125,6 @@ export type Project = {
   priority?: ProjectPriority;
 };
 
-/** 首页 · 精选项目 */
-export const FEATURED = {
-  title: "精选项目",
-  empty: "项目整理中，敬请期待。",
-  projects: [    {
-      name: "U-Net 航空影像语义分割（大创）",
-      url: "https://github.com/PiggyHanHan/U-Net-for-Aerial-Imagery-Semantic-Segmentation",
-      desc: "基于 U-Net 的航空影像语义分割，用于浮游植物无人机监测",
-      status: "推进中 · 待立项",
-      meaning: "核心学术项目",
-      priority: "核心",
-    },
-    {
-      name: "农田无人机喷洒系统（Drone_Farm）",
-      url: "https://github.com/HuajiMX/Drone_Farm",
-      desc: "GD32H7 单片机上的农田无人机喷洒农药模拟系统",
-      status: "已完成",
-      meaning: "学校嵌入式课程实践（组队项目）",
-      priority: "次要",
-    },
-  ],
-} satisfies { title: string; empty: string; projects: Project[] };
-
-/** 项目页：左右两列（学术项目 | 个人项目） */
-export const PROJECTS = {
-  title: "项目",
-  intro: "学术与个人项目一览。",
-  columns: [
-    {
-      name: "学术项目",
-      projects: [
-        {
-          name: "U-Net 航空影像语义分割（大创）",
-          url: "https://github.com/PiggyHanHan/U-Net-for-Aerial-Imagery-Semantic-Segmentation",
-          desc: "基于 U-Net 的航空影像语义分割，用于浮游植物无人机监测。本地为完整开发工作区：模型训练、视觉处理、数值计算、客户端应用与论文写作。",
-          status: "推进中 · 待立项",
-          meaning: "核心学术项目",
-          priority: "核心",
-        },
-        {
-          name: "农田无人机喷洒系统（Drone_Farm）",
-          url: "https://github.com/HuajiMX/Drone_Farm",
-          desc: "运行在 GD32H7 嵌入式单片机上的农田无人机喷洒农药模拟系统：种植、虫害、无人机巡查喷洒、收获售卖、策略升级，LVGL 图形界面（队友见友链）。",
-          status: "已完成",
-          meaning: "学校嵌入式课程实践（组队项目）",
-          priority: "次要",
-        },
-      ],
-    },
-    {
-      name: "个人项目",
-      projects: [
-        {
-          name: "Personal_blog（本博客）",
-          url: "https://github.com/PiggyHanHan/Personal_blog",
-          desc: "基于 Next.js 的个人博客，胡桃主题定制化：开屏动画、背景轮播、左侧导航、首页名片/技术栈/经历/项目/个性化。",
-          status: "持续更新",
-          meaning: "个人博客项目",
-          priority: "核心",
-        },
-        {
-          name: "labelme",
-          url: "https://github.com/PiggyHanHan/labelme",
-          desc: "辅助大创项目的标注工具链",
-          status: "可使用",
-          meaning: "辅助大创项目的标注工作",
-          priority: "重要",
-        },
-        {
-          name: "MCM-2026C（美赛）",
-          url: "https://github.com/PiggyHanHan/MCM-2026C",
-          desc: "2026 数学建模美赛 C 题",
-          status: "已结束",
-          meaning: "体验美赛",
-          priority: "次要",
-        },
-        {
-          name: "U-Net-Oxford-Pets",
-          url: "https://github.com/PiggyHanHan/U-Net-Oxford-Pets",
-          desc: "Oxford Pets 多类分割练习，为大创做准备",
-          status: "已完成",
-          meaning: "深度学习练习 · 为大创做准备",
-          priority: "次要",
-        },
-        {
-          name: "CIFAR-10",
-          url: "https://github.com/PiggyHanHan/CIFAR-10",
-          desc: "基于 PyTorch 实现的 CIFAR-10 图像分类",
-          status: "已完成",
-          meaning: "深度学习练习 · 图像分类入门",
-          priority: "次要",
-        },
-        {
-          name: "MNIST",
-          url: "https://github.com/PiggyHanHan/MNIST",
-          desc: "MNIST / EMNIST 学习 + 手写数字识别网站",
-          status: "已完成",
-          meaning: "深度学习练习 · 入门 + 识别网站",
-          priority: "次要",
-        },
-      ],
-    },
-  ],
-} satisfies {
-  title: string;
-  intro: string;
-  columns: { name: string; projects: Project[] }[];
-};
-
 /** 首页 · 个性化（游戏/歌手带喜欢程度，装备为 名称: 值） */
 export const INTERESTS = {
   title: "生活",
@@ -286,32 +177,6 @@ export const POST = {
   back: "← 返回文章列表",
   prev: "上一篇",
   next: "下一篇",
-};
-
-/** 友链页（note = 网站形式；avatar 可选，缺省用首字母头像） */
-export const LINKS = {
-  title: "友链",
-  intro: "我的朋友们。",
-  empty: "友链建设中，敬请期待。",
-  links: [
-    {
-      name: "Parrotools",
-      url: "https://parrotools.top/posts/hello-world-the-first-post",
-      note: "私人云服务器",
-    },
-    {
-      name: "HuajiMC",
-      url: "https://blog.huajimc.cn",
-      note: "公网",
-      avatar: "/friends/huajimc.ico",
-    },
-    {
-      name: "LemonNK",
-      url: "https://hualemon6.github.io/lemonnk-blog/",
-      note: "GitHub Pages",
-      avatar: "/friends/lemonnk.svg",
-    },
-  ],
 };
 
 /** 关于页 */

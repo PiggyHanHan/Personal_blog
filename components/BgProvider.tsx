@@ -32,6 +32,41 @@ export const useBg = () => useContext(BgContext);
 const INTERVAL_MS = 15000; // 每 15 秒切换一张
 const FADE_MS = 1800; // 交叉淡入淡出时长
 
+// 背景会话连续性：洗牌结果 + 当前索引存到 sessionStorage。
+// layout 在每次客户端导航都会重新执行（getBgImages 返回新数组，触发洗牌 effect 重跑），
+// 若不持久化，每次切页面都重新随机 → 换新图 → 重新下载 → 网卡时先黑屏。
+const BG_STATE_KEY = "blog-bg-state";
+type BgSavedState = { order: number[]; idx: number; count: number };
+
+function loadBgState(count: number): BgSavedState | null {
+  if (typeof window === "undefined") return null; // SSR 阶段不读
+  try {
+    const raw = sessionStorage.getItem(BG_STATE_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw) as BgSavedState;
+    if (!s || !Array.isArray(s.order) || s.count !== count) return null;
+    if (s.order.length !== count) return null;
+    const seen = new Set(s.order);
+    if (seen.size !== count || s.order.some((n) => n < 0 || n >= count)) return null;
+    if (typeof s.idx !== "number" || s.idx < 0 || s.idx >= count) return null;
+    return s;
+  } catch {
+    return null;
+  }
+}
+
+function saveBgState(order: number[], idx: number) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(
+      BG_STATE_KEY,
+      JSON.stringify({ order, idx, count: order.length } satisfies BgSavedState)
+    );
+  } catch {
+    /* 隐私模式等场景忽略 */
+  }
+}
+
 export default function BgProvider({
   images,
   children,
@@ -42,11 +77,19 @@ export default function BgProvider({
   const bgImages = images.length > 0 ? images : null;
 
   // 洗牌（客户端挂载后执行，避免服务端/客户端随机不一致导致水合失败）
+  // 优先恢复会话内已保存的顺序，没有才重新随机——保证切页面/刷新后背景连续
   const [order, setOrder] = useState<number[]>(() =>
     bgImages ? bgImages.map((_, i) => i) : []
   );
+  const [idx, setIdx] = useState(0); // 当前完全显示的图（order 中的位置）
   useEffect(() => {
     if (!bgImages) return;
+    const saved = loadBgState(bgImages.length);
+    if (saved) {
+      setOrder(saved.order);
+      setIdx(saved.idx);
+      return;
+    }
     const arr = bgImages.map((_, i) => i);
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -55,7 +98,12 @@ export default function BgProvider({
     setOrder(arr);
   }, [bgImages]);
 
-  const [idx, setIdx] = useState(0); // 当前完全显示的图（order 中的位置）
+  // 顺序 / 当前索引变化时存回 sessionStorage
+  useEffect(() => {
+    if (!bgImages || order.length === 0) return;
+    saveBgState(order, idx);
+  }, [order, idx, bgImages]);
+
   const [fading, setFading] = useState(false); // 是否处于交叉过渡中
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
