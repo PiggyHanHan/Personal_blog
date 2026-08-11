@@ -57,3 +57,6 @@ types/                  # 全局类型声明（pdfjs-legacy.d.ts）
 - Playwright / 自动化验证时**开屏动画遮罩（IntroOverlay）会拦截所有点击**：用 `?skipIntro=1` 跳过，或先点「开屏动画，点击任意位置进入」等其消失（`intro-overlay--done`）再操作。
 - 已知 404（与功能无关）：开屏音效 `door-open.wav` 素材缺失、`favicon.ico`。
 - 验证导航是否发生整页刷新：`performance.getEntriesByType('navigation')` 的 `timeOrigin` 变化即整页导航（SPA 导航不变）。
+
+## 工具漏洞
+- 不再调用remember/memory 工具，该工具有可能导致Reasonix崩溃
