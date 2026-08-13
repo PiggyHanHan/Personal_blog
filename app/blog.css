@@ -561,6 +561,81 @@ h1, h2, h3, h4 {
   font-size: 0.84rem;
   color: var(--ink-soft);
 }
+/* 图片行：同一行多张图并排（桌面），窄屏自动竖排 */
+.post-body .image-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.4rem 0;
+}
+.post-body .image-row figure {
+  flex: 1 1 45%;
+  min-width: 0;
+  margin: 0;
+}
+.post-body .image-row figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(189, 154, 68, 0.4);
+}
+/* 图片网格（矩阵）：每列等宽（左右对齐），每行等高（上下对齐），
+   等比缩放不拉伸，超出部分 object-fit: cover 裁切填满 */
+.post-body .image-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols, 1), 1fr);
+  gap: 1rem;
+  margin: 1.4rem 0;
+}
+.post-body .image-grid figure {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-width: 0;
+}
+.post-body .image-grid figure img {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(189, 154, 68, 0.4);
+}
+@media (max-width: 640px) {
+  .post-body .image-row figure {
+    flex-basis: 100%;
+  }
+  .post-body .image-grid {
+    --grid-cols: 1 !important;
+  }
+}
+/* GFM 表格 */
+.post-body .post-table {
+  margin: 1.3rem 0;
+  overflow-x: auto;
+}
+.post-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.post-body th,
+.post-body td {
+  padding: 0.5rem 0.85rem;
+  border: 1px solid rgba(189, 154, 68, 0.35);
+  text-align: left;
+  vertical-align: middle;
+}
+.post-body th {
+  background: rgba(189, 154, 68, 0.16);
+  color: var(--crimson);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.post-body tbody tr:nth-child(even) td {
+  background: rgba(189, 154, 68, 0.05);
+}
 
 /* 上一篇 / 下一篇 */
 .post-nav {

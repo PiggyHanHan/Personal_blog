@@ -19,14 +19,20 @@ import type { ReactNode } from "react";
 import matter from "gray-matter";
 import { markdownToBlocks } from "./markdown";
 
-/** 正文的一个块。支持段落 / 小节标题 / 引用 / 列表 / 代码块 / 插图 */
+/** 插图：src 为站点根路径（如 /md_images/xxx.png），可选 alt / 图注 */
+export type PostImage = { src: string; alt?: string; caption?: string };
+
+/** 正文的一个块。支持段落 / 小节标题 / 引用 / 列表 / 代码块 / 插图 / 图片行 */
 export type Block =
   | { type: "heading"; level: 2 | 3; text: ReactNode }
   | { type: "paragraph"; text: ReactNode }
   | { type: "quote"; text: ReactNode }
   | { type: "list"; ordered?: boolean; items: ReactNode[] }
   | { type: "code"; lang?: string; code: string }
-  | { type: "image"; src: string; alt?: string; caption?: string };
+  | { type: "image"; src: string; alt?: string; caption?: string }
+  | { type: "imageRow"; images: PostImage[] }
+  | { type: "imageGrid"; rows: PostImage[][] }
+  | { type: "table"; align: (string | null)[]; head: ReactNode[]; rows: ReactNode[][] };
 
 /** 文章分类：学术 | 个人（文章页按此分成两列） */
 export const POST_CATEGORIES = ["学术", "个人"] as const;

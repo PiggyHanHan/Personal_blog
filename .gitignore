@@ -21,7 +21,7 @@ npm-debug.log*
 # typescript
 *.tsbuildinfo
 
-# playwright 鎴�浘绛変复鏃朵骇鐗�
+# playwright 鎴??浘绛変复鏃朵骇鐗??
 .playwright-mcp/
 
 # reasonix 工具内部数据
@@ -32,3 +32,6 @@ npm-debug.log*
 /public/intro/
 /public/hutao/
 /public/border/
+
+# 文章图片压缩产物（原图在 content/md_images，构建时自动生成）
+/public/md_images/

@@ -26,6 +26,7 @@ components/
   home/ post/ projects/ site/ ui/   # 页面卡片 / 文章组件 / 站点布局 / 基础 UI
 content/                # 数据源（改内容不碰代码）
   posts/*.md            # 文章（frontmatter: title/slug/date/category/excerpt/tags/pdf）
+  md_images/            # 文章图片【原图】（构建时自动压缩到 public/md_images）
   projects.json         # 项目
   links.json            # 友链
 lib/                    # 数据层：posts.ts(md)、content.ts(json)、markdown.tsx(md→Block)、site.ts(站点配置)
@@ -51,6 +52,7 @@ types/                  # 全局类型声明（pdfjs-legacy.d.ts）
 - 文章：`content/posts/*.md`，frontmatter 含 `title/slug/date/category/excerpt/tags/pdf`；`category: 学术|个人`（缺省归个人），文章页按此分「学术文章/个人文章」顶部 tab；**slug 必须英文字母/数字/下划线/连字符**（中文 slug 详情页 404）。
 - 项目：`content/projects.json`（`featured` + `projects.columns`）；友链：`content/links.json`。
 - 详情页 PDF 内联预览：`/api/view/<相对路径>`（`Content-Disposition: inline`）；下载入口：正文里 `/files/*.pdf` 链接。改完需重新构建。
+- **文章图片**：原图放 `content/md_images/`，md 里写相对路径 `../md_images/xxx.png`（同一路径两处通：本地/GitHub 预览解析到 `content/md_images/` 看原图；网站详情页等二级路径解析到 `/md_images/xxx.png` 看压缩图）。`npm.cmd run build` 前自动执行 `scripts/compress-md-images.mjs` 压缩到 `public/md_images/`（同名文件、等比缩放到最长边 1600px、png 量化/mozjpeg、gif 原样拷贝、只压变更、清理残留），也可手动 `node scripts/compress-md-images.mjs`。正文**连续图片行自动合成网格**：同一行多张图并排且等宽等高对齐，连续多行组成矩阵，窄屏自动单列竖排。改完需重新构建。
 - **日志一式两份**：开发者详细日志写 `logs/<日期>.md`（给自己，含技术坑/下一步）；访客版提炼进 `content/changelog/<日期>.md`（给外面的，frontmatter 含 `title/date/excerpt`，只写功能更新与修复）——关于页顶部预览最近一次，点「查看全部」进 `/changelog` 卡片列表，再点卡片进每日详情。改完需重新构建。
 
 ## 测试注意

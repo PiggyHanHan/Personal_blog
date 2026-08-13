@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/compress-md-images.mjs",
     "build": "next build",
     "start": "next start"
   },
@@ -13,7 +14,9 @@
     "pdfjs-dist": "^6.2.108",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
+    "sharp": "^0.35.3",
     "unified": "^11.0.5"
   },
   "devDependencies": {
