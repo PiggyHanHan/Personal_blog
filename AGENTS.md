@@ -51,6 +51,7 @@ types/                  # 全局类型声明（pdfjs-legacy.d.ts）
 - 文章：`content/posts/*.md`，frontmatter 含 `title/slug/date/category/excerpt/tags/pdf`；`category: 学术|个人`（缺省归个人），文章页按此分「学术文章/个人文章」顶部 tab；**slug 必须英文字母/数字/下划线/连字符**（中文 slug 详情页 404）。
 - 项目：`content/projects.json`（`featured` + `projects.columns`）；友链：`content/links.json`。
 - 详情页 PDF 内联预览：`/api/view/<相对路径>`（`Content-Disposition: inline`）；下载入口：正文里 `/files/*.pdf` 链接。改完需重新构建。
+- **日志一式两份**：开发者详细日志写 `logs/<日期>.md`（给自己，含技术坑/下一步）；访客版提炼进 `content/changelog/<日期>.md`（给外面的，frontmatter 含 `title/date/excerpt`，只写功能更新与修复）——关于页顶部预览最近一次，点「查看全部」进 `/changelog` 卡片列表，再点卡片进每日详情。改完需重新构建。
 
 ## 测试注意
 

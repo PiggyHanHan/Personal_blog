@@ -182,17 +182,27 @@ export const POST = {
 /** 关于页 */
 export const ABOUT = {
   title: "关于",
-  intro: "关于吴天宇的一点点介绍。",
+  intro: "关于这个博客（旅行者的见闻录）的一点点介绍。",
   sections: {
-    profile: "档案",
-    skills: "技能一览",
-    writing: "写作方向",
-    contact: "联系我",
+    changelog: "博客更新日志",
+    repo: "本站仓库",
+    doll: "胡桃",
   },
-  profile: "[待填写：自我介绍]",
-  skills: ["[待填写：技能 1]", "[待填写：技能 2]", "[待填写：技能 3]"],
-  writing: ["[待填写：方向 1]", "[待填写：方向 2]", "[待填写：方向 3]"],
-  contactEmail: "[你的邮箱]",
-  contactGithub: "[你的 GitHub 链接]",
-  cta: "去看看文章 →",
+  /** 本站源码仓库（GitHub） */
+  repoUrl: "https://github.com/PiggyHanHan/Personal_blog",
+  repoDesc: "本站源码托管在 GitHub（PiggyHanHan/Personal_blog），持续更新中，欢迎交流。",
+  /** 底部胡桃玩偶的提示语 */
+  dollHint: "点我说话（记得开声音）",
+  /** 更新日志区块：最近一次日志下的入口文案 */
+  changelogMore: "查看全部更新日志 →",
+  /** 更新日志区块的引导语（显示在最近一次日志标题上方） */
+  changelogIntro: "最近一次更新",
+};
+
+/** 更新日志列表页 */
+export const CHANGELOG = {
+  title: "更新日志",
+  intro: "博客功能更新与修复记录，按时间排列，最新在最上面。",
+  empty: "还没有日志，敬请期待。",
+  back: "← 返回更新日志",
 };
