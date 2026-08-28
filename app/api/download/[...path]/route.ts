@@ -1,6 +1,6 @@
 // ============================================================
-// 文件下载接口：/api/download/<public/files 下的相对路径>
-// 例如 /api/download/我的论文.pdf → 强制下载 public/files/我的论文.pdf
+// 文件下载接口：/api/download/<content/files 下的相对路径>
+// 例如 /api/download/我的论文.pdf → 强制下载 content/files/我的论文.pdf
 // 作用：让"下载 PDF"链接真正触发浏览器下载（而不是打开预览）。
 // ============================================================
 import { existsSync, readFileSync } from "node:fs";
@@ -19,10 +19,10 @@ export async function GET(
   }
 
   const relative = segments.join("/");
-  const filesRoot = path.join(process.cwd(), "public", "files");
+  const filesRoot = path.join(process.cwd(), "content", "files");
   const full = path.resolve(filesRoot, relative);
 
-  // 防路径穿越：只允许 public/files/ 下的文件
+  // 防路径穿越：只允许 content/files/ 下的文件
   if (!full.startsWith(filesRoot + path.sep)) {
     return new NextResponse("forbidden", { status: 403 });
   }

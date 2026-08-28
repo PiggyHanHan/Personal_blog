@@ -55,6 +55,9 @@ components/
   ui/                   # 基础 UI：Frame / TagPill / ElementIcon
 content/
   posts/*.md           # ★ 文章源文件：加新文章就在这里新建 .md（见下文）
+  files/               # ★ 附件（PDF 等）：往这里丢文件即可被文章链接引用
+  md_images/           # 文章插图原图（构建时自动压缩到 public/md_images）
+  changelog/           # 更新日志（访客版）
   projects.json        # ★ 项目数据：首页精选 + 项目页两列
   links.json           # ★ 友链数据
 lib/
@@ -66,9 +69,9 @@ types/                  # 全局类型声明（pdfjs-legacy.d.ts）
 public/
   hutao/                # 开屏素材：door/chibi/bg/vision 四张图（见 README.txt）
   bg/                   # 背景图：往这里丢图片就自动轮播
-  files/                # 附件（PDF 等）：往这里丢文件即可被文章链接引用
   friends/              # 友链头像
-  intro/                # （旧版视频开屏素材，已废弃，可删除）
+  md_images/            # 文章插图压缩图（构建产物，勿手改）
+  border/               # 卡片装饰边框（前端静态资源）
 docs/
   user/                 # 使用者指南：访问我的博客 / 启动服务器指南 / 内容更新指南
   dev/                  # 开发文档：整体结构设计 / 导航栏与页面内容设计 / 开发备忘
@@ -100,7 +103,7 @@ tags: [AI, 笔记]
 
 ## 怎么放 PDF / 附件文件（比如学术论文）
 
-把文件放进 `public/files/` 文件夹（没有就新建一个），正文里用链接语法指过去：
+把文件放进 `content/files/` 文件夹（没有就新建一个），正文里用链接语法指过去：
 
 ```md
 ## 论文
@@ -108,10 +111,10 @@ tags: [AI, 笔记]
 [📄 下载《XXX》全文 PDF](/files/xxx.pdf)
 ```
 
-- 访问地址就是文件在 `public/files/` 里的路径：`/files/xxx.pdf`
+- 访问地址就是 `/files/` + 文件名：`/files/xxx.pdf`（Nginx 直接托管 `content/files/`，或本地经 `/api/view`、`/api/download` 读取）
 - **中文文件名也可以**，比如 `/files/我的论文.pdf`
-- 点链接会在**新标签页**打开 PDF（用浏览器自带的阅读器），原文章页保留
-- 放文件不用改代码、不用重新构建，刷新页面即生效
+- 正文里指向 `/files/*.pdf` 的链接会**直接触发下载**（走 `/api/download`）；文章页顶部若有 `pdf` 字段则用 `/api/view` 内联预览
+- 只新增/替换同名 PDF 文件（不动文章正文）不用重建，刷新即生效；改了文章正文（新增引用）需要重新构建
 
 ## 怎么加项目 / 友链
 
