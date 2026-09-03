@@ -51,7 +51,7 @@ types/                  # 全局类型声明（pdfjs-legacy.d.ts）
 
 ## 内容更新（改文件即可，不碰代码）
 
-- 文章：`content/posts/*.md`，frontmatter 含 `title/slug/date/category/excerpt/tags/pdf`；`category: 学术|个人`（缺省归个人），文章页按此分「学术文章/个人文章」顶部 tab；**slug 必须英文字母/数字/下划线/连字符**（中文 slug 详情页 404）。
+- 文章：`content/posts/*.md`，frontmatter 含 `title/slug/date/category/excerpt/tags/pdf`；`category: 研究|工程|生活`（缺省归生活），文章页按此分「研究文章/工程文章/生活文章」三个顶部 tab（从左到右）；**slug 必须英文字母/数字/下划线/连字符**（中文 slug 详情页 404）。
 - 项目：`content/projects.json`（`featured` + `projects.columns`）；友链：`content/links.json`。
 - 详情页 PDF 内联预览：`/api/view/<相对路径>`（`Content-Disposition: inline`）；下载入口：正文里 `/files/*.pdf` 链接。PDF 文件放 `content/files/`（Nginx `/files/` 直接托管，或经 `/api/view`、`/api/download` 读取）。改了文章正文需重新构建；只替换同名 PDF 文件可不用构建。
 - **文章图片**：原图放 `content/md_images/`，md 里写相对路径 `../md_images/xxx.png`（同一路径两处通：本地/GitHub 预览解析到 `content/md_images/` 看原图；网站详情页等二级路径解析到 `/md_images/xxx.png` 看压缩图）。`npm.cmd run build` 前自动执行 `scripts/compress-md-images.mjs` 压缩到 `public/md_images/`（同名文件、等比缩放到最长边 1600px、png 量化/mozjpeg、gif 原样拷贝、只压变更、清理残留），也可手动 `node scripts/compress-md-images.mjs`。正文**连续图片行自动合成网格**：同一行多张图并排且等宽等高对齐，连续多行组成矩阵，窄屏自动单列竖排。改完需重新构建。

@@ -2,7 +2,7 @@
 title: 一场追了半天的「分区上色不一致」bug：问题根本不在代码里
 slug: zoning-color-bug-not-in-code
 date: 2026-08-29
-category: 个人
+category: 工程
 excerpt: 一次大创项目系统的排查：上色图对不上当天图，追了半天发现问题根本不在代码里，而是临时脚本导致的数据不自洽
 tags: [大创项目, vibe coding, 排查思路]
 ---

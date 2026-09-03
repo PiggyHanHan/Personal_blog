@@ -2,7 +2,7 @@
 title: DeepSeek Harness 初体验：第一版就能打，省钱效率直追 Reasonix
 slug: deepseek-harness-first-impression
 date: 2026-08-13
-category: 个人
+category: 工程
 excerpt: 实测 DeepSeek Harness 第一版标准模式在编码场景下的省钱效率，缓存命中率已与 Reasonix 持平，插件化架构更让未来可期。
 tags: [DeepSeek, DSH, vibe coding]
 ---

@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
 // 顶部切换：把内容按 tab 分组，一次只显示一组
-// 文章页（学术文章|个人文章）、项目页（学术项目|个人项目）共用
+// 文章页（研究文章|工程文章|生活文章）、项目页（学术项目|个人项目）共用
 //
 // 可选定位：initialTabName 决定初始选中哪个 tab；scrollToSlug 对应卡片有
 // data-slug 属性，渲染后滚动到它并尽量居中（卡片比视口高时对齐顶部）。

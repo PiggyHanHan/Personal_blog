@@ -9,7 +9,7 @@ export const metadata = { title: "文章" };
 export default function PostsPage() {
   const columns = getPostsGrouped();
 
-  // slug → tab 名映射（"学术文章"/"个人文章"）。
+  // slug → tab 名映射（"研究文章"/"工程文章"/"生活文章"）。
   // 纯静态数据，序列化传给客户端组件：由 TabbedSections 读取 ?post=<slug>
   // 实现"从详情页返回时定位"，页面本身不依赖 searchParams，保持静态预渲染。
   const slugToTabName: Record<string, string> = {};
@@ -38,7 +38,7 @@ export default function PostsPage() {
         <p>{POSTS.intro}</p>
       </div>
 
-      {/* 顶部切换：学术文章 | 个人文章 */}
+      {/* 顶部切换：研究文章 | 工程文章 | 生活文章 */}
       {/* Suspense 边界：客户端 useSearchParams 需要（Next.js 15 静态渲染要求） */}
       <Suspense fallback={<p className="empty">加载中…</p>}>
         <TabbedSections tabs={tabs} slugToTabName={slugToTabName} />

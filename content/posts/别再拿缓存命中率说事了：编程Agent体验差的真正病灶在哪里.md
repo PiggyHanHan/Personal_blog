@@ -2,7 +2,7 @@
 title: 别再拿缓存命中率说事了：编程Agent体验差的真正病灶在哪里
 slug: cache-hit-rate-pricing-transparency
 date: 2026-08-27
-category: 个人
+category: 研究
 excerpt: 别再拿缓存命中率说事了：编程Agent体验差的真正病灶在哪里————编程Agent体验差的真实归因与定价逻辑拆解
 tags:
   - AI agent

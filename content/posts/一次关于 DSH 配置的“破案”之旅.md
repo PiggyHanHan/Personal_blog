@@ -2,7 +2,7 @@
 title: 一次关于 DSH 配置的“破案”之旅
 slug: dsh-config-debugging
 date: 2026-08-25
-category: 个人
+category: 工程
 excerpt: 模型列表里明明有视觉模型，上传图片却总报错？一次手把手教你发现 YAML 纯覆盖与字段缺失真相的实战记录。
 tags: [DSH, deepseek-v4-flash-vision-exp, 踩坑]
 ---

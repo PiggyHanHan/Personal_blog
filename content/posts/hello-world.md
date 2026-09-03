@@ -1,7 +1,7 @@
 ---
 title: 你好，世界！
 date: 2026-08-10
-category: 个人
+category: 生活
 excerpt: 这是我的第一篇博客，先打个招呼。这个站还在建设中。
 tags:
   - 杂谈

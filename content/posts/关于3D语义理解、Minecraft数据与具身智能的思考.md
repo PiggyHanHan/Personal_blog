@@ -2,7 +2,7 @@
 title: 关于3D语义理解、Minecraft数据与具身智能的思考
 slug: 3d-semantics-minecraft-embodied-ai
 date: 2026-08-21
-category: 学术
+category: 研究
 excerpt: 从语义分割与语义理解的区分出发，探讨 Minecraft 合成数据对 3D 空间理解与具身智能的价值与边界。
 tags: [具身智能, 3D视觉, Minecraft, 语义理解, 数据合成]
 ---

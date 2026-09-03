@@ -5,7 +5,7 @@
 //   title: 文章标题
 //   slug: my-post            # 链接标识 → /posts/my-post（必须英文；省略时用文件名）
 //   date: 2026-08-10        # YYYY-MM-DD
-//   category: 个人           # 文章分类：学术 | 个人（决定文章页落在哪一列；缺省为个人）
+//   category: 研究           # 文章分类：研究 | 工程 | 生活（决定文章页落在哪个 tab；缺省为生活）
 //   excerpt: 列表页摘要
 //   tags: [AI, 笔记]
 //   ---
@@ -34,8 +34,8 @@ export type Block =
   | { type: "imageGrid"; rows: PostImage[][] }
   | { type: "table"; align: (string | null)[]; head: ReactNode[]; rows: ReactNode[][] };
 
-/** 文章分类：学术 | 个人（文章页按此分成两列） */
-export const POST_CATEGORIES = ["学术", "个人"] as const;
+/** 文章分类：研究 | 工程 | 生活（文章页按此分成三个 tab，顺序从左到右） */
+export const POST_CATEGORIES = ["研究", "工程", "生活"] as const;
 export type PostCategory = (typeof POST_CATEGORIES)[number];
 
 export type Post = {
@@ -45,7 +45,7 @@ export type Post = {
   title: string;
   /** 发布日期，格式 YYYY-MM-DD */
   date: string;
-  /** 文章分类：学术 | 个人，决定文章页落在哪一列（缺省为个人） */
+  /** 文章分类：研究 | 工程 | 生活，决定文章页落在哪个 tab（缺省为生活） */
   category: PostCategory;
   /** 列表页显示的摘要 */
   excerpt: string;
@@ -75,13 +75,13 @@ function loadAllPosts(): Post[] {
             `中文文件名请在 frontmatter 里显式指定英文 slug，例如：\n---\ntitle: ...\nslug: my-post\n---`
         );
       }
-      // 分类：frontmatter 的 category，非“学术/个人”或缺省时归为“个人”
-      const rawCategory = str(data.category, "个人");
+      // 分类：frontmatter 的 category，非“研究/工程/生活”或缺省时归为“生活”
+      const rawCategory = str(data.category, "生活");
       const category: PostCategory = (
         POST_CATEGORIES as readonly string[]
       ).includes(rawCategory)
         ? (rawCategory as PostCategory)
-        : "个人";
+        : "生活";
 
       return {
         slug,
@@ -116,7 +116,7 @@ export function getAllPosts(): Post[] {
   return loadAllPosts().sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-/** 文章页分组：按分类返回各列（顺序固定：学术在前、个人在后），每列按日期倒序 */
+/** 文章页分组：按分类返回各 tab（顺序固定：研究、工程、生活），每组按日期倒序 */
 export function getPostsGrouped(): { name: PostCategory; posts: Post[] }[] {
   const all = getAllPosts();
   return POST_CATEGORIES.map((name) => ({
