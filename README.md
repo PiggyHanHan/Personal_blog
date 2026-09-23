@@ -167,4 +167,5 @@ Next.js 15（App Router）· React 19 · TypeScript · gray-matter · remark-gfm
 
 ## License
 
-（建议补充 LICENSE，如 MIT。）第三方素材（`public/hutao/` 内的角色图与语音、`public/bg/` 的背景图）版权归原作者 / 米哈游所有，商用或公开发布前请自行替换或确认授权。
+- **源代码**：MIT 协议，见 `LICENSE`。
+- **素材（图 / 音频）**：⚠ **不随代码开源**。`public/hutao/`、`public/theme/`、`public/bg/` 下的胡桃 / 原神相关素材版权归 HoYoverse / 米哈游所有，**仅供个人学习与本地演示，禁止商用**；公开发布前请自行替换为你拥有版权或已授权的素材。详见 `版权声明.md`。
