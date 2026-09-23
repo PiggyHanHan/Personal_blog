@@ -1,0 +1,39 @@
+# ===== dependencies =====
+/node_modules
+
+# ===== Next.js build output =====
+/.next/
+/out/
+/build
+
+# ===== env files & secrets (never commit) =====
+.env*
+!.env.example
+*.pem
+
+# ===== TypeScript build cache =====
+*.tsbuildinfo
+
+# ===== personal dev logs (local only) =====
+/logs/
+
+# ===== IDE / agent tooling =====
+.idea/
+.playwright-mcp/
+.reasonix/
+
+# ===== auto-generated: compressed article images (built from content/md_images) =====
+/public/md_images/
+
+# ===== media backup library: not used by the site, large; keep local only =====
+/public/hutao/待用库/
+
+# ===== unused decorative frames (keep local only if needed) =====
+/public/border/
+
+# ===== deployment packages (script-generated) =====
+*.tar.gz
+
+# ===== OS junk =====
+.DS_Store
+Thumbs.db

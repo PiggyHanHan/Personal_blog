@@ -1,0 +1,72 @@
+{
+  "featured": {
+    "title": "精选项目",
+    "empty": "项目整理中，敬请期待。",
+    "projects": [
+      {
+        "name": "示例项目 A（请替换）",
+        "url": "https://example.com",
+        "desc": "首页「精选项目」示例卡片，改成你自己的项目。",
+        "status": "示例",
+        "meaning": "首页精选区",
+        "priority": "核心"
+      },
+      {
+        "name": "示例：私有项目（可删除）",
+        "desc": "private: true 的示例：卡片显示「需口令」徽章与私有纹章。",
+        "status": "示例",
+        "meaning": "演示私有标记",
+        "priority": "次要",
+        "private": true
+      }
+    ]
+  },
+  "projects": {
+    "title": "项目",
+    "intro": "项目页按分类分栏展示。下面两列都是示例，替换成你自己的项目。",
+    "columns": [
+      {
+        "name": "示例：研究项目",
+        "projects": [
+          {
+            "name": "示例项目 B（请替换）",
+            "url": "https://example.com",
+            "desc": "分栏项目示例卡片。",
+            "status": "示例",
+            "meaning": "研究方向",
+            "priority": "重要"
+          },
+          {
+            "name": "示例项目 C（请替换）",
+            "url": "https://example.com",
+            "desc": "又一个示例项目。",
+            "status": "示例",
+            "meaning": "研究方向",
+            "priority": "次要"
+          }
+        ]
+      },
+      {
+        "name": "示例：个人项目",
+        "projects": [
+          {
+            "name": "示例项目 D（请替换）",
+            "url": "https://example.com",
+            "desc": "个人项目示例卡片。",
+            "status": "示例",
+            "meaning": "个人作品",
+            "priority": "重要"
+          },
+          {
+            "name": "示例项目 E（请替换）",
+            "url": "https://example.com",
+            "desc": "又一个示例项目。",
+            "status": "示例",
+            "meaning": "个人作品",
+            "priority": "次要"
+          }
+        ]
+      }
+    ]
+  }
+}

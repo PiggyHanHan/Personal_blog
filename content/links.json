@@ -1,0 +1,17 @@
+{
+  "title": "友链",
+  "intro": "朋友们的站。",
+  "empty": "友链建设中，敬请期待。",
+  "links": [
+    {
+      "name": "示例友链 A",
+      "url": "https://example.com",
+      "note": "示例：没有头像时自动显示首字母"
+    },
+    {
+      "name": "示例友链 B",
+      "url": "https://example.org",
+      "note": "示例：把头像放进 public/friends/ 后填 avatar 字段"
+    }
+  ]
+}
