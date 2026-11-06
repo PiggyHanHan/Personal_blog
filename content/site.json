@@ -1,0 +1,94 @@
+{
+  "site": {
+    "name": "我的博客",
+    "description": "一个基于 Next.js 的个人博客",
+    "footer": "© 2026 我的博客",
+    "builtAt": "建站于 2026.01.01"
+  },
+  "hero": {
+    "name": "你的名字",
+    "gender": "男",
+    "birthday": "2000.01.01",
+    "school": {
+      "name": "你的学校",
+      "url": "https://example.com"
+    },
+    "college": {
+      "name": "你的学院 / 单位",
+      "url": "https://example.com"
+    },
+    "major": "你的专业 / 身份",
+    "research": "你的方向",
+    "motto": "在这里写一句座右铭",
+    "avatar": "/hutao/使用中/小素材/胡桃立绘.jpg",
+    "socials": []
+  },
+  "tech": {
+    "title": "技术栈",
+    "groups": [
+      {
+        "name": "语言",
+        "items": [
+          { "name": "Python", "level": 70 },
+          { "name": "TypeScript", "level": 60 },
+          { "name": "C++", "level": 50 }
+        ]
+      },
+      {
+        "name": "方向",
+        "items": [
+          { "name": "Web 开发", "level": 60 },
+          { "name": "数据科学", "level": 50 }
+        ]
+      }
+    ]
+  },
+  "experience": {
+    "title": "经历",
+    "items": [
+      {
+        "date": "2026.01",
+        "title": "开始写博客",
+        "text": "用这个模板搭起了自己的博客，开始记录学习与生活。"
+      },
+      {
+        "date": "2026.02",
+        "title": "第二条时间线",
+        "text": "示例经历，改成你自己的里程碑。"
+      }
+    ]
+  },
+  "interests": {
+    "title": "生活",
+    "groups": [
+      {
+        "name": "爱好",
+        "items": [
+          { "label": "示例：阅读", "note": "100%" },
+          { "label": "示例：写作", "note": "80%" }
+        ]
+      },
+      {
+        "name": "装备与工具",
+        "items": [
+          { "label": "IDE", "note": "VS Code" },
+          { "label": "终端", "note": "Windows Terminal" }
+        ]
+      }
+    ]
+  },
+  "about": {
+    "title": "关于",
+    "intro": "关于这个博客的一点点介绍。",
+    "sections": {
+      "changelog": "博客更新日志",
+      "repo": "本站仓库",
+      "doll": "小玩偶"
+    },
+    "repoUrl": "https://github.com/你的用户名/你的仓库",
+    "repoDesc": "本站源码托管在 GitHub，欢迎交流。把这里改成你自己的仓库地址。",
+    "dollHint": "点我说话（记得开声音）",
+    "changelogMore": "查看全部更新日志 →",
+    "changelogIntro": "最近一次更新"
+  }
+}

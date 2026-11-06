@@ -33,7 +33,8 @@ export type ChangelogEntry = {
 
 const CHANGELOG_DIR = path.join(process.cwd(), "content", "changelog");
 
-function loadAllChangelog(): ChangelogEntry[] {
+/** 解析全部日志（不带缓存，外部走 loadAllChangelog()） */
+function parseAllChangelog(): ChangelogEntry[] {
   if (!existsSync(CHANGELOG_DIR)) return [];
   return readdirSync(CHANGELOG_DIR)
     .filter((file) => file.endsWith(".md"))
@@ -58,6 +59,18 @@ function loadAllChangelog(): ChangelogEntry[] {
     });
 }
 
+/**
+ * 全部日志（带进程内缓存）。与 lib/posts.ts 同理：每个 /changelog/[slug] 页面
+ * 都要重新解析一遍，缓存一次即可；next dev 下不缓存，改了 md 立刻可见。
+ */
+let changelogCache: ChangelogEntry[] | null = null;
+
+function loadAllChangelog(): ChangelogEntry[] {
+  if (process.env.NODE_ENV === "development") return parseAllChangelog();
+  changelogCache ??= parseAllChangelog();
+  return changelogCache;
+}
+
 function str(value: unknown, fallback: string): string {
   if (typeof value === "string" && value.trim() !== "") return value;
   // YAML 会把裸日期（如 2026-08-11）解析成 Date 对象
@@ -72,7 +85,8 @@ function str(value: unknown, fallback: string): string {
 
 /** 全部更新日志，按日期倒序（最新在前） */
 export function getChangelogEntries(): ChangelogEntry[] {
-  return loadAllChangelog().sort((a, b) => (a.date < b.date ? 1 : -1));
+  // sort 是原地排序：不能直接排序缓存里的数组，先复制一份再排
+  return [...loadAllChangelog()].sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 /** 最近一次日志（关于页顶部预览用），无日志时返回 undefined */

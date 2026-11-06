@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/compress-md-images.mjs",
+    "predev": "node scripts/gen-post-index.mjs",
+    "prebuild": "node scripts/compress-md-images.mjs && node scripts/gen-post-index.mjs",
     "build": "next build",
     "start": "next start"
   },

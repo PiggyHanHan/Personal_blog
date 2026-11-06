@@ -1,21 +1,19 @@
 // ============================================================
-// 站点文案 / 配置（集中管理）
+// 站点文案 / 配置
 //
-// ★ 站点名 / 个人资料 / 技术栈 / 经历 / 兴趣都在这里改，组件无需动。
-//   项目与友链数据不在代码里：见 content/projects.json 和 content/links.json。
-//   下面标「示例」的内容全部换成你自己的即可。
+// 分两层，别再混：
+//   1. **可编辑的内容数据**（站点信息 / 首页名片 / 技术栈 / 经历 / 生活 / 关于页）
+//      → content/site.json。本文件只负责导入再导出，改数据不用碰代码。
+//      下面标「示例」的内容全部换成你自己的即可。
+//   2. **界面文案**（导航、按钮、空状态、隐私口径等）
+//      → 就在本文件下面，属于界面的一部分，跟着代码走。
+//
+// 项目与友链数据同样在 content/ 下：projects.json / links.json。
 // ============================================================
+import siteContent from "../content/site.json";
 
-export const SITE = {
-  /** 站点名（侧边栏品牌区 / 页脚 / 元信息） */
-  name: "我的博客",
-  /** 站点一句话描述（侧边栏副标题） */
-  description: "一个基于 Next.js 的个人博客",
-  /** 页脚版权行 */
-  footer: "© 2026 我的博客",
-  /** 页脚建站时间（第二行） */
-  builtAt: "建站于 2026.01.01",
-};
+/** 站点信息：站名 / 副标题 / 页脚（品牌区、页脚、元信息共用） */
+export const SITE = siteContent.site;
 
 /** 左侧导航栏（5 项） */
 export const NAV = [
@@ -26,71 +24,27 @@ export const NAV = [
   { href: "/about", label: "关于" },
 ];
 
-/** 首页 · 名片（全部是示例，换成你自己的） */
-export const HERO = {
-  /** 姓名 */
-  name: "你的名字",
-  /** 性别 */
-  gender: "男",
-  /** 生日 */
-  birthday: "2000.01.01",
-  /** 学校（官网链接） */
-  school: { name: "你的学校", url: "https://example.com" },
-  /** 学院 / 单位（官网链接） */
-  college: {
-    name: "你的学院 / 单位",
-    url: "https://example.com",
-  },
-  /** 专业班级 / 身份 */
-  major: "你的专业 / 身份",
-  /** 研究方向 / 自我介绍一句话 */
-  research: "你的方向",
-  /** 座右铭 */
-  motto: "在这里写一句座右铭",
-  /** 个人头像（竖长图，放名片最左侧）。模板默认用胡桃主题立绘，换成你自己的照片即可 */
-  avatar: "/hutao/使用中/小素材/胡桃立绘.jpg",
-  /** 社交链接（填了才显示，格式 { label, href }；不需要就留空数组） */
-  socials: [] as { label: string; href: string }[],
+/** 首页 · 名片（姓名 / 性别 / 生日 / 学校 / 学院 / 专业 / 方向 / 座右铭 / 立绘 / 社交链接） */
+export type Hero = {
+  name: string;
+  gender: string;
+  birthday: string;
+  school: { name: string; url: string };
+  college: { name: string; url: string };
+  major: string;
+  research: string;
+  motto: string;
+  avatar: string;
+  /** 社交链接（填了才显示；`socials: []` 时整块不渲染） */
+  socials: { label: string; href: string }[];
 };
+export const HERO: Hero = siteContent.hero;
 
-/** 首页 · 技术栈（示例，改成你自己的；level 为掌握程度 0-100） */
-export const TECH = {
-  title: "技术栈",
-  groups: [
-    {
-      name: "语言",
-      items: [
-        { name: "Python", level: 70 },
-        { name: "TypeScript", level: 60 },
-        { name: "C++", level: 50 },
-      ],
-    },
-    {
-      name: "方向",
-      items: [
-        { name: "Web 开发", level: 60 },
-        { name: "数据科学", level: 50 },
-      ],
-    },
-  ],
-};
+/** 首页 · 技术栈（分组展示，level 为掌握程度 0-100） */
+export const TECH = siteContent.tech;
 
-/** 首页 · 经历（时间线，示例，换成你自己的里程碑） */
-export const EXPERIENCE = {
-  title: "经历",
-  items: [
-    {
-      date: "2026.01",
-      title: "开始写博客",
-      text: "用这个模板搭起了自己的博客，开始记录学习与生活。",
-    },
-    {
-      date: "2026.02",
-      title: "第二条时间线",
-      text: "示例经历，改成你自己的里程碑。",
-    },
-  ],
-};
+/** 首页 · 经历（时间线） */
+export const EXPERIENCE = siteContent.experience;
 
 /** 项目类型：名称 / 地址（可选）/ 描述 / 状态（可选）/ 意义（可选）/ 重要性 */
 export type ProjectPriority = "核心" | "重要" | "次要";
@@ -105,32 +59,15 @@ export type Project = {
   private?: boolean;
 };
 
-/** 首页 · 生活（示例：爱好 / 工具等，带喜欢程度或备注） */
+/** 首页 · 生活（爱好 / 工具等，带喜欢程度或备注） */
 export type InterestGroup = {
   name: string;
   items: { label: string; note: string }[];
   /** 分组底部的备注（可选） */
   note?: string;
 };
-export const INTERESTS: { title: string; groups: InterestGroup[] } = {
-  title: "生活",
-  groups: [
-    {
-      name: "爱好",
-      items: [
-        { label: "示例：阅读", note: "100%" },
-        { label: "示例：写作", note: "80%" },
-      ],
-    },
-    {
-      name: "装备与工具",
-      items: [
-        { label: "IDE", note: "VS Code" },
-        { label: "终端", note: "Windows Terminal" },
-      ],
-    },
-  ],
-};
+export const INTERESTS: { title: string; groups: InterestGroup[] } =
+  siteContent.interests;
 
 /** 首页文章区块文案 */
 export const HOME = {
@@ -177,6 +114,47 @@ export const POST = {
   next: "下一篇",
 };
 
+/** 文章互动的表情种类（key 会写进数据库，只许小写字母） */
+export type ReactionKind = "like" | "fire" | "think" | "bulb";
+
+/**
+ * 文章互动（点赞 / 多表情反应）。
+ * 数字同样客户端拉取；私有文章的处理见 exposePrivateOnCards。
+ */
+export const REACTIONS = {
+  /** 文末互动条的标题 */
+  title: "读后留痕",
+  /** 引导语 */
+  intro: "点一下告诉我这篇读起来如何，再点一次可以取消",
+  /** 表情按钮（顺序即展示顺序，第一个是"点赞"） */
+  kinds: [
+    { key: "like", emoji: "👍", label: "赞" },
+    { key: "fire", emoji: "🔥", label: "带劲" },
+    { key: "think", emoji: "🤔", label: "有疑问" },
+    { key: "bulb", emoji: "💡", label: "学到了" },
+  ] as { key: ReactionKind; emoji: string; label: string }[],
+  /** 读屏用的一句话（互动条整体） */
+  hint: "互动数存在本站自己的服务器上，不接第三方统计。",
+  /** 提交失败时的提示 */
+  failed: "没记上，稍后再试一次",
+  /**
+   * 卡片上点赞数的前缀（不用 👍 表情，改成文字 + 神之眼图标）
+   * 渲染成「[神之眼] 点赞：12」
+   */
+  cardLabel: "点赞：",
+  /**
+   * 「热门」阈值：点赞数 ≥ 这个值时，卡片上的神之眼会**冒火元素纹样**
+   * （与开屏进度条加载满时同一种效果，见 components/ui/FireVision.tsx 的 full 态）。
+   */
+  hotThreshold: 100,
+  /**
+   * 私有文章是否在文章列表卡片上露出互动数（默认不露）。
+   * 详情页解锁后照常可以点、也照常看得到数字。
+   * 想让私有文章也出现，把这里改成 true 即可（前端与卡片同时生效）。
+   */
+  exposePrivateOnCards: false,
+};
+
 /** 主题纹章素材（public/theme/，随仓库发布） */
 export const THEME_ASSETS = {
   /** 公开内容纹章 */
@@ -188,16 +166,99 @@ export const THEME_ASSETS = {
   /** 各纹章的替代文本 */
   altPublic: "公开内容纹章",
   altPrivate: "私有内容纹章",
+  /**
+   * 返回顶部按钮上的角色脸（创意来源：public/hutao/待用库/ 里那张哈希名图）。
+   * **必须放在 public/theme/**——public/hutao 不进部署包。
+   */
+  hutaoFace: "/theme/hutao-face.webp",
+
+  // ↓ 神之眼 / 火元素纹样：原图在 public/hutao/使用中/小素材/，
+  //   这里放 WebP 版——同样是为了不依赖那个"不进部署包"的目录，
+  //   开屏、门扉、卡片点赞图标、点击火花现在全走 public/theme/。
+  /** 火系神之眼（叩门按钮 / 收窗帘收拢边 / 卡片点赞图标） */
+  vision: "/theme/fire-vision.webp",
+  /** 火元素图样（神之眼点亮后的外溢粒子 / 点击火花 / 热门文章的发热效果） */
+  fire: "/theme/fire-element.webp",
 
   // ↓ 门扉锁屏复用的开屏素材（与 components/layout/IntroOverlay.tsx 同一套文件）
-  /** 开屏第一屏的场景图（门扉锁屏的背景，cover 全屏铺满） */
+  /** 开屏第一屏的场景图（门扉锁屏的背景方案，cover 全屏铺满） */
   doorScene: "/hutao/使用中/背景/door.png",
-  /** Q版小素材（"起！"那张，开屏与门扉开启都用它） */
+  /** Q版小素材（"起！"那张，开屏 swap 阶段与门扉开启都用它） */
   chibiBurst: "/hutao/使用中/小素材/chibi2.png",
-  /** 神之眼（叩门按钮 / 收窗帘收拢边） */
-  vision: "/hutao/使用中/小素材/火系神之眼.png",
-  /** 火元素图样（神之眼周围外溢的粒子） */
-  fire: "/hutao/使用中/小素材/火元素图样.png",
+};
+
+/** 悬浮小道具（返回顶部、点击火花、侧边栏神之眼）文案 */
+export const WIDGETS = {
+  /** 返回顶部按钮的无障碍名称与悬停提示 */
+  backToTop: "返回顶部",
+  /** 点火花彩蛋的提示（不显示，只给读屏/调试用） */
+  sparks: "火元素点击粒子",
+  /** 侧边栏那枚神之眼：点一下随机听一句角色台词 */
+  visionLabel: "点一下神之眼，听胡桃说句话",
+  visionHint: "点它说话",
+};
+
+/** 设置面板里的声音相关文案（含「胡桃语音」总开关） */
+export const SOUND_UI = {
+  title: "设置",
+  volumeLabel: "音频音量",
+  volumeHint: "作用于开屏音效与胡桃语音",
+  voiceLabel: "胡桃语音",
+  voiceOn: "开",
+  voiceOff: "关",
+  voiceHint: "点 Q 版胡桃或侧边栏的神之眼会随机说一句；关掉后两者都不出声（开屏音效不受影响）",
+};
+
+/**
+ * 访客计数：**开屏「欢迎光临」下面一行 + 左侧导航栏一块**。
+ *
+ * 显示口径按「今天 / 历史」两组分开，别混着写：
+ *   开屏    → 只留一句「你是今日第 N 位旅人」（数字小、有"被认出来"的亲近感）
+ *   侧边栏  → 同一句 + 今日翻阅次数 + 历史来访旅人 + 历史翻阅次数（今天/历史各自标清）
+ *
+ * 数字全部由客户端在 hydrate 后拉取（页面必须保持静态 ○）。
+ */
+export const VISITS = {
+  /** 「你是今日第 N 位旅人」的前半句（开屏与侧边栏共用） */
+  ordinalPrefix: "你是今日第",
+  ordinalSuffix: "位旅人",
+  /** 侧边栏第二行：今日翻阅次数 */
+  todayViewsLabel: "今日翻阅次数",
+  todayViewsUnit: "次",
+  /** 侧边栏第三行：历史来访旅人 */
+  totalVisitorsLabel: "历史来访旅人",
+  totalVisitorsUnit: "位",
+  /** 侧边栏第四行：历史翻阅次数 */
+  totalViewsLabel: "历史翻阅次数",
+  totalViewsUnit: "次",
+  /** 侧边栏小标题 */
+  sidebarTitle: "旅人簿",
+  /** 数据还没回来时的占位（**不显示假数字**） */
+  placeholder: "旅人簿翻页中…",
+  /** 接口不可用 / 被限流时的静默提示 */
+  unavailable: "旅人簿暂不可用",
+  /** 鼠标悬停的隐私口径说明（顺带解释"历史来访旅人"为什么按天算） */
+  hint: "只按「IP + 浏览器特征」做当天匿名去重，不存 IP、不写 Cookie；同一个人换一天会各算一位，所以「历史来访旅人」是累计的「访客·天数」。",
+};
+
+/**
+ * 单篇文章的阅读数。
+ *
+ * ⚠️ **口径必须写清**：这里是**翻阅次数（PV）**——同一个人多次打开会重复计数
+ * （同路径 10 秒内去重），所以文案里**不许**出现"人看过""N 位读者"，
+ * 只用「翻阅」这个词，和侧边栏「今日翻阅次数 / 历史翻阅次数」同一套说法。
+ *
+ * 数字来自 `/api/stats` 的 `posts`（并进 lib/visitStore.ts 的同一份快照，不额外发请求）：
+ *   · 一次都没人翻开过的篇目、以及**所有私有文章**（它们不在公开映射里）→ 整块不渲染，不显示 0；
+ *   · 数字没回来之前只占位（一个不断版的空格），避免"先撑开再缩回去"的跳动。
+ */
+export const VISIT_COUNT = {
+  /** 标题下那枚只读徽章的前缀（渲染成「翻阅 12 次」） */
+  label: "翻阅",
+  /** 单位 */
+  unit: "次",
+  /** 徽章 / 文末那行的悬停提示（口径与隐私一句话讲清） */
+  hint: "这篇被翻开的次数（同一路径 10 秒内只记一次，刷新会重复累计）。只保存匿名哈希，不存 IP、不写 Cookie。",
 };
 
 /** 私有内容（加密文章 / 私有项目 / 私有友链）的统一文案 */
@@ -232,25 +293,8 @@ export const PRIVATE_UI = {
   footnote: "这篇内容默认加密，只有拿到口令的人能读。",
 };
 
-/** 关于页 */
-export const ABOUT = {
-  title: "关于",
-  intro: "关于这个博客的一点点介绍。",
-  sections: {
-    changelog: "博客更新日志",
-    repo: "本站仓库",
-    doll: "小玩偶",
-  },
-  /** 本站源码仓库（GitHub）——改成你自己的仓库地址 */
-  repoUrl: "https://github.com/你的用户名/你的仓库",
-  repoDesc: "本站源码托管在 GitHub，欢迎交流。把这里改成你自己的仓库地址。",
-  /** 底部小玩偶的提示语 */
-  dollHint: "点我说话（记得开声音）",
-  /** 更新日志区块：最近一次日志下的入口文案 */
-  changelogMore: "查看全部更新日志 →",
-  /** 更新日志区块的引导语（显示在最近一次日志标题上方） */
-  changelogIntro: "最近一次更新",
-};
+/** 关于页（标题 / 引导语 / 三个区块的标题 / 仓库信息 / 胡桃提示） */
+export const ABOUT = siteContent.about;
 
 /** 更新日志列表页 */
 export const CHANGELOG = {

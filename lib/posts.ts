@@ -97,7 +97,12 @@ const PRIVATE_TAGS = new Set(["private", "私有", "加密"]);
 /** 构建期提示只打一次（loadAllPosts 在构建过程中会被调用很多次） */
 let warnedSkipEncrypt = false;
 
-function loadAllPosts(): Post[] {
+/**
+ * 解析全部 Markdown（纯计算，**不带缓存**）——外部请一律走 loadAllPosts()。
+ * 单次解析并不便宜：25 篇文章要完整跑一遍 remark；其中 7 篇私有文章还要各跑一次
+ * PBKDF2-SHA256（25 万次迭代，见 privateCrypto.ts），2 vCPU 服务器上合计约 4 秒。
+ */
+function parseAllPosts(): Post[] {
   if (!existsSync(POSTS_DIR)) return [];
   return readdirSync(POSTS_DIR)
     .filter((file) => file.endsWith(".md"))
@@ -164,6 +169,25 @@ function loadAllPosts(): Post[] {
     });
 }
 
+/**
+ * 全部文章（带进程内缓存）。**这是唯一对外的读取入口**。
+ *
+ * 为什么必须缓存：Next 预渲染静态页时，每个页面都会分别调用
+ * generateStaticParams / generateMetadata / 页面组件 / PostNav，
+ * 每一次都会重新解析全部 Markdown。本站 25 篇文章实测一次构建调用 78 次，
+ * 其中 76 次是完全重复的劳动；而因为私有文章的 PBKDF2 会跟着重跑，
+ * 构建耗时随「文章数 × 私有文章数」近似平方增长——文章越多越慢，就是这个原因。
+ *
+ * 缓存只用于生产构建 / 服务进程；next dev 下保持每次重新读取，改了 md 立刻可见。
+ */
+let postsCache: Post[] | null = null;
+
+function loadAllPosts(): Post[] {
+  if (process.env.NODE_ENV === "development") return parseAllPosts();
+  postsCache ??= parseAllPosts();
+  return postsCache;
+}
+
 /** 构建期汇总提示：本地预览模式下有私有文章时提醒一次（防止把明文产物对外发布） */
 function warnPreview(all: Post[]): Post[] {
   if (!warnedSkipEncrypt && isEncryptSkipped()) {
@@ -195,7 +219,10 @@ function str(value: unknown, fallback: string): string {
 
 /** 按日期倒序返回全部文章（最新在前） */
 export function getAllPosts(): Post[] {
-  return warnPreview(loadAllPosts().sort((a, b) => (a.date < b.date ? 1 : -1)));
+  // sort 是原地排序：不能直接排序缓存里的数组，先复制一份再排
+  return warnPreview(
+    [...loadAllPosts()].sort((a, b) => (a.date < b.date ? 1 : -1))
+  );
 }
 
 /** 全部文章的摘要（不含正文 / 密文，可安全序列化给客户端组件） */

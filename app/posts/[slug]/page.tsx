@@ -8,6 +8,9 @@ import PostBody from "@/components/post/PostBody";
 import PostNav from "@/components/post/PostNav";
 import PdfPreview from "@/components/post/PdfPreview";
 import PrivateGate from "@/components/post/PrivateGate";
+import ReactionBar from "@/components/interaction/ReactionBar";
+import ReactionSummary from "@/components/interaction/ReactionSummary";
+import ViewCount from "@/components/interaction/ViewCount";
 
 /** /files/xxx.pdf → /api/view/xxx.pdf（浏览器内联预览，不触发下载） */
 function toViewHref(pdf: string): string {
@@ -48,6 +51,10 @@ export default async function PostPage({
   // 内嵌 PDF 附件（如果有）：加密文章连附件一起放进门后，只在解锁后渲染
   const pdfSlot = post.pdf ? <PdfPreview src={toViewHref(post.pdf)} /> : null;
 
+  // 3.4 / 3.6 文末互动条。私有文章把它塞进 PrivateGate 的 children：
+  // 门后内容只在解锁后渲染，所以锁着时连按钮都不存在（§0.6 D5 的默认口径）。
+  const reactions = <ReactionBar slug={post.slug} />;
+
   return (
     <div className="page-stack">
       <Frame>
@@ -68,12 +75,19 @@ export default async function PostPage({
             {post.tags.map((tag) => (
               <TagPill key={tag} tag={tag} />
             ))}
+            {/* 3.4/3.6 的统计（只显示，不是入口）：读之前就知道这篇的评价。
+                私有文章锁屏是全屏接管，解锁前看不到它（§0.6 D5 的默认口径）。 */}
+            <ReactionSummary slug={post.slug} />
+            {/* 3.20 阅读数：同一行的另一枚只读徽章（「翻阅 12 次」）。
+                数字 hydrate 后才有；一次都没人翻开过、或这篇是私有文章 → 整块不渲染（不显示 0）。 */}
+            <ViewCount slug={post.slug} />
           </div>
         </header>
 
         {locked ? (
           <PrivateGate payload={post.encrypted!} slug={post.slug}>
             {pdfSlot}
+            {reactions}
           </PrivateGate>
         ) : (
           <>
@@ -82,6 +96,7 @@ export default async function PostPage({
             ) : null}
             {pdfSlot}
             <PostBody content={post.content} />
+            {reactions}
           </>
         )}
       </Frame>

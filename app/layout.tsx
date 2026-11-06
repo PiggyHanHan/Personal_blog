@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import fs from "node:fs";
 import path from "node:path";
 import IntroOverlay from "@/components/layout/IntroOverlay";
-import { SITE } from "@/lib/site";
 import BlogBackground from "@/components/layout/BlogBackground";
 import BgProvider from "@/components/providers/BgProvider";
 import SoundProvider from "@/components/providers/SoundProvider";
 import SettingsButton from "@/components/layout/SettingsButton";
+import BackToTop from "@/components/layout/BackToTop";
+import FireSparks from "@/components/layout/FireSparks";
+import VisitReporter from "@/components/interaction/VisitReporter";
+import { SITE } from "@/lib/site";
 import SiteSidebar from "@/components/site/SiteSidebar";
 import SiteFooter from "@/components/site/SiteFooter";
 import "./globals.css";
@@ -56,6 +59,11 @@ export default function RootLayout({
             <SettingsButton />
           </SoundProvider>
         </div>
+        {/* §9 趣味互动：点击火花（9.2，纯视觉层）+ 返回顶部（9.3，左下角） */}
+        <FireSparks />
+        <BackToTop />
+        {/* 3.1 访客上报：只上报不显示；数字由开屏与侧边栏两处共享（lib/visitStore.ts） */}
+        <VisitReporter />
       </body>
     </html>
   );

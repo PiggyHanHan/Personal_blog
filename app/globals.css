@@ -369,6 +369,27 @@ article p {
   animation: intro-fade-up 0.8s ease-out 0.4s both;
 }
 
+/* 开屏的「旅人簿」那行（3.1 验收意见：访客数要在第一眼就看得到的地方）
+   2026-10-11 第二次验收后只留一句「你是今日第 N 位旅人」——
+   历史累计数字放这儿太大、反而没有社交气息，所以开屏只留今日序号（历史数据在侧边栏）。
+   比 .intro-welcome 晚一点淡入、字小一号、别抢主标题 */
+.visits--intro {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  color: #9a6a55;
+  animation: intro-fade-up 0.8s ease-out 0.9s both;
+}
+.visits--intro strong {
+  color: #b9923f;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+/* 数据没回来 / 接口不可用：同一行位置换成一句小字（不显示假数字） */
+.visits--quiet {
+  opacity: 0.55;
+}
+
 /* 底部加载区：璃月火系神之眼 — 进度条 — 神之眼（镜像） */
 .intro-loading {
   position: absolute;
@@ -436,38 +457,50 @@ article p {
   }
 }
 
-/* 火元素粒子：进度满后从宝石中心向随机方向陆续外溢，到 --dist 距离后缩小消失。
-   方向/距离用 CSS 变量 --dir/--dist 控制，animation-delay 错开形成"陆续"感 */
+/* 火元素粒子：点亮后从宝石**背后**陆续飘出，尺寸/时长/延迟/距离全部由
+   components/ui/FireVision.tsx 的 makeEmbers() 逐颗随机——
+   旧写法把延迟按 i/6 均分、时长固定 2s linear，看起来像节拍器在"固定角频率"地一圈圈扩散，
+   很生硬（2026-10-11 验收第二轮指出）。现在与点击火花 .spark 共用 @keyframes ember-fly，手感一致。
+   ⚠️ 只位移、不旋转；⚠️ z-index 必须在宝石（.intro-vision 的 2）**下面**，火才是从背后冒出来的。 */
 .intro-fire-particle {
   position: absolute;
   left: 50%;
   top: 50%;
-  z-index: 4;
-  width: 32px;
-  height: 32px;
-  margin: -16px 0 0 -16px;
+  z-index: 1;
+  width: var(--size, 22px);
+  height: var(--size, 22px);
+  /* 反向外边距：以宝石中心为原点，而不是以自身左上角 */
+  margin: calc(var(--size, 22px) / -2) 0 0 calc(var(--size, 22px) / -2);
   object-fit: contain;
   pointer-events: none;
   user-select: none;
   opacity: 0;
-  animation: intro-fire-particle 2s linear infinite;
+  animation: ember-fly var(--life, 1.6s) cubic-bezier(0.16, 0.72, 0.32, 1) infinite;
 }
-@keyframes intro-fire-particle {
+/* 一颗粒子的完整一生：从中心外侧一点"弹"出来 → 飘远 → 缩小消失。
+   起点就偏移 12%（不是正中），所以任何时刻都不会有一颗粒子正好糊住宝石中心。 */
+@keyframes ember-fly {
   0% {
-    transform: rotate(var(--dir, 0deg)) translateX(8px) scale(1);
+    transform: translate(calc(var(--dx, 0px) * 0.12), calc(var(--dy, -30px) * 0.12))
+      scale(0.55);
     opacity: 0;
   }
-  12% {
-    opacity: 0.95;
+  18% {
+    opacity: 1;
+    transform: translate(calc(var(--dx, 0px) * 0.26), calc(var(--dy, -30px) * 0.26))
+      scale(1);
   }
   70% {
     opacity: 0.9;
   }
   100% {
-    transform: rotate(var(--dir, 0deg)) translateX(var(--dist, 50px)) scale(0.12);
+    transform: translate(var(--dx, 0px), var(--dy, -30px)) scale(0.35);
     opacity: 0;
   }
 }
+
+/* 行内小尺寸（文章卡片的热门神之眼）：粒子的尺寸/距离由 JS 的 compact 分支给（见 FireVision.tsx），
+   这里不用再覆盖——留着这条规则会跟内联的 --size 打架。 */
 
 /* 进度条本体：浅红底 + 红金渐变填充 */
 .intro-track {
@@ -715,4 +748,170 @@ article p {
   margin: 10px 0 0;
   font-size: 0.75rem;
   color: #b9a98c;
+}
+
+/* 「胡桃语音」总开关（计划 9.1 要求的那个开关）
+   与音量滑杆同一行排版：标签 — 开关 — 开/关 */
+.settings-switch {
+  position: relative;
+  flex: 1;
+  height: 20px;
+  padding: 0;
+  border: 1px solid rgba(233, 185, 62, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.settings-switch--on {
+  background: rgba(140, 47, 57, 0.85);
+  border-color: rgba(233, 185, 62, 0.7);
+}
+.settings-switch:focus-visible {
+  outline: 2px solid #e9b93e;
+  outline-offset: 2px;
+}
+.settings-switch__knob {
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: #f4e3c2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: left 0.2s ease;
+}
+.settings-switch--on .settings-switch__knob {
+  left: calc(100% - 16px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .settings-switch,
+  .settings-switch__knob {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   悬浮小道具（计划 §9：9.2 火元素点击粒子 / 9.3 返回顶部）
+   ------------------------------------------------------------
+   两个都是"外层"元素（与设置按钮同级），所以放 globals 而不是 blog.css。
+   层级取 **900**：盖得住正文与卡片，但低于
+     往生堂门扉（.post-gate__overlay，9000）、开屏（.intro-overlay，9999）、设置按钮（10000）。
+   那两处是全屏仪式，不该有"返回顶部"或火花浮在上面。
+   位置：返回顶部在**右下角、与设置按钮并排**（⚠️ 设置按钮虽然在本文件里写着 left:16px，
+   但 blog.css 末尾有一条覆盖把它挪到了右下角——改布局前先全局搜类名，见下面 9.3 的说明）。
+   ============================================================ */
+
+/* ---------- 9.2 火元素点击粒子 ---------- */
+/* 粒子层本身绝不拦截点击（pointer-events: none），只是画在最上面 */
+.spark-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none;
+  overflow: hidden;
+}
+.spark {
+  position: absolute;
+  width: var(--size, 8px);
+  height: var(--size, 8px);
+  /* 反向 margin：让粒子以"指尖"为中心，而不是以自身左上角对齐 */
+  margin: calc(var(--size, 8px) / -2) 0 0 calc(var(--size, 8px) / -2);
+  /* 图案本体是火元素纹样（background-image 由组件注入 THEME_ASSETS.fire），
+     **不旋转**——纹样一歪就难看（与 @keyframes ember-fly 同一个教训） */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 0 5px rgba(255, 168, 72, 0.75));
+  will-change: transform, opacity;
+  /* 与火元素粒子共用同一套"火星"手感：随机时长/距离/尺寸 + 非线性缓动，一次性播放 */
+  animation: ember-fly var(--life, 620ms) cubic-bezier(0.16, 0.72, 0.32, 1) both;
+}
+
+/* ---------- 9.3 返回顶部 ---------- */
+/* ⚠️ 位置：**右下角，与设置按钮并排**（不在同一个点上）。
+   坑的经过：globals.css 里 .settings-wrap 写的是 left:16px，但 blog.css 末尾有一条覆盖
+   （"设置按钮：左侧已有导航栏，从左下角移到右下角"）把它挪到了**右下角**——
+   第一版照 globals.css 的注释把返回顶部放右下角，两个圆钮直接叠在一起（验收意见 5）。
+   改成左下角后又会压住侧边栏的版权行，所以最终方案是：右下角、让开设置按钮的位置。
+   间距：设置按钮 44px 宽 + right:16px（占 16~60），这里 right:72px → 两者间隔 12px。
+   设置面板向上弹（bottom:54px），只会切到本按钮上沿约 10px，可接受。 */
+.back-to-top {
+  position: fixed;
+  right: 72px;
+  bottom: 16px; /* 与 .settings-btn 的 bottom 一致，两个圆钮水平对齐 */
+  z-index: 900;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(233, 185, 62, 0.5);
+  border-radius: 50%;
+  background: rgba(20, 15, 16, 0.72);
+  cursor: pointer;
+  /* 隐藏用 visibility（顺带脱离 tab 顺序与读屏），不用 display:none——那样没法过渡 */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(8px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.2s ease,
+    visibility 0.25s;
+}
+.back-to-top--on {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+.back-to-top:hover {
+  transform: translateY(-3px);
+  border-color: #e9b93e;
+}
+.back-to-top:focus-visible {
+  outline: 2px solid #e9b93e;
+  outline-offset: 2px;
+}
+/* 胡桃的脸（背景图由组件用 THEME_ASSETS 注入，避免路径写两份） */
+.back-to-top__face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  /* 略微上移，让圆里留住眼睛那张脸 */
+  background-position: center 34%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+/* 右下角的小箭头徽章：光有一张脸看不出是"回到顶部" */
+.back-to-top__arrow {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(255, 240, 210, 0.55);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #c9a253, #8c2f39);
+  color: #fff6d8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 粒子压根不该生成（组件里已经拦了），这里再兜一层：万一有残留节点也不动 */
+  .spark-layer {
+    display: none;
+  }
+  .back-to-top,
+  .back-to-top--on {
+    transition: none;
+  }
+  .back-to-top:hover {
+    transform: none;
+  }
 }

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useBg } from "@/components/providers/BgProvider";
 import { useIntroSounds } from "@/components/hooks/useIntroSounds";
 import FireVision from "@/components/ui/FireVision";
+import VisitorLine from "@/components/interaction/VisitorLine";
 import { THEME_ASSETS } from "@/lib/site";
 
 // ============================================================
@@ -365,6 +366,8 @@ export default function IntroOverlay() {
             />
           )}
           <p className="intro-welcome">往生堂 · 欢迎光临</p>
+          {/* 3.1 旅人簿：第一眼就能看到"你是第几位来访的旅人"（验收意见 1） */}
+          <VisitorLine variant="intro" />
         </div>
 
         <div className="intro-loading">

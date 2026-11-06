@@ -2,6 +2,8 @@ import { HERO } from "@/lib/site";
 import Frame from "@/components/ui/Frame";
 
 // 首页 · 名片：左胡桃立绘 + 右姓名/性别/生日/学校/学院/班级/科研方向
+// （9.4 打字机标题做过又按 2026-10-11 验收意见 6 撤掉：只打名字反而不好看，
+//   改回直接显示全名的 h1；当时加的 .typewriter 样式也已删掉）
 export default function HeroCard() {
   return (
     <Frame className="hero-card">

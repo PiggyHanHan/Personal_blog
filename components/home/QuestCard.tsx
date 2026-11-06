@@ -3,6 +3,7 @@ import type { PostSummary } from "@/lib/posts";
 import { PRIVATE_UI } from "@/lib/site";
 import Sigil from "@/components/ui/Sigil";
 import TagPill from "@/components/ui/TagPill";
+import CardLikes from "@/components/interaction/CardLikes";
 
 // 单张文章卡片（冒险委托卡）：标题 + 日期 + 标签徽章 + 摘要
 // 只用 PostSummary（不含正文 / 密文），所以既能被服务端组件渲染，也能被搜索结果的客户端组件复用
@@ -35,6 +36,8 @@ export default function QuestCard({ post }: { post: PostSummary }) {
         <span className="quest-card__go">
           {post.private ? "输入口令 →" : "阅读全文 →"}
         </span>
+        {/* 3.5：赞数 hydrate 后才有（卡片是静态渲染的），0 赞不渲染任何东西 */}
+        <CardLikes slug={post.slug} isPrivate={post.private} />
       </div>
       {/* 纹章：骑在卡片右下角（~1/3 在内、2/3 在外），位置/尺寸见 blog.css 的 .quest-card > .sigil */}
       <Sigil variant={post.private ? "private" : "public"} />

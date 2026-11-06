@@ -76,6 +76,15 @@ function walk(dir, out = []) {
  * Next.js 的 RSC 载荷（flight）会把长字符串抽成独立分块，页面里出现的是
  * `"ct":"$17"` 这样的引用，真正的密文在 `17:T<十六进制长度>,<内容>` 行里，
  * 所以这里先把所有 self.__next_f.push 的片段拼回完整 flight 文本，再解引用。
+ *
+ * ⚠️ **正则必须同时吃"转义引号"与"未转义引号"两种形态**（2026-10-15 修）。
+ * 某个版本的 Next 起，产物里的 flight 文本是 `{\"kdf\":\"PBKDF2-SHA256\",…,\"ct\":\"$1c\"}`
+ * ——每个引号前面都带反斜杠。老正则只给 `ct` 的**左引号**写了 `\\?`（`ct":"`），
+ * 于是：① 反斜杠被吃掉、正则整体仍能命中；② `$1c` 里 `1c` 有字母，
+ * 第二分支 `(\d+)` 匹配不上，就落到第一分支 `([^"]+)`；
+ * ③ 结果把 **`"$1c"` 这 3 个字符的引用**当成密文（真密文在 `1c:T…` 分块里，3236 字符），
+ * 解密必然抛 OperationError——**静默误报"校验通过"的元凶就是这个**。
+ * 现在：左引号同样补 `\\?`，内联分支用 `[^"\\$]` 排除分块引用，并且解引用失败直接判失败。
  */
 function extractPayloads(html) {
   const rows = [];
@@ -100,11 +109,21 @@ function extractPayloads(html) {
   };
 
   const payloadRe =
-    /"kdf":"PBKDF2-SHA256","iter":(\d+),"cipher":"AES-256-GCM","salt":"([^"]+)","iv":"([^"]+)","ct":"(?:\\?\$(\d+)|([^"]+))"/g;
+    /\\?"kdf\\?":\\?"PBKDF2-SHA256\\?",\\?"iter\\?":(\d+),\\?"cipher\\?":\\?"AES-256-GCM\\?",\\?"salt\\?":\\?"([^"\\]+)\\?",\\?"iv\\?":\\?"([^"\\]+)\\?",\\?"ct\\?":\\?"(?:\$([0-9a-f]+)|([^"\\$]+))\\?"/g;
   const found = [];
   let hit;
   while ((hit = payloadRe.exec(flight)) !== null) {
-    const ct = hit[5] ?? chunk(hit[4]);
+    // 带 $id 的一律走分块解引用；解不出来就**跳过并留证据**，绝不退化成"内联密文"
+    let ct = null;
+    if (hit[4]) {
+      ct = chunk(hit[4]);
+      if (!ct) {
+        found.push({ iter: Number(hit[1]), salt: hit[2], iv: hit[3], ct: "", refMissing: hit[4] });
+        continue;
+      }
+    } else {
+      ct = hit[5];
+    }
     if (!ct) continue;
     found.push({ iter: Number(hit[1]), salt: hit[2], iv: hit[3], ct });
   }
@@ -270,11 +289,27 @@ async function main() {
       continue;
     }
     const unique = new Map(payloads.map((p) => [p.ct, p]));
+    const first = [...unique.values()][0];
     console.log(
-      `  载荷：${unique.size} 份（迭代 ${[...unique.values()][0].iter}，密文 ${[...unique.values()][0].ct.length} 字符）`
+      `  载荷：${unique.size} 份（迭代 ${first.iter}，密文 ${first.ct.length} 字符）`
     );
     if ([...unique.values()][0].iter !== 250000) {
       fail(`迭代次数不是 250000（实际 ${[...unique.values()][0].iter}）`);
+    }
+    // 解引用失败（引用的分块不存在）→ 明确指出，别让它伪装成"密文很短"
+    if (first.refMissing) {
+      fail(`载荷里的 ct 是分块引用 $${first.refMissing}，但 flight 里找不到该分块（载荷结构又变了？）`);
+      continue;
+    }
+    // 密文长度兜底：GCM 认证标签就 16 字节，base64 后至少 24 个字符；
+    // 这里放宽到 32 —— 短于它只可能是"把 $1c 这种引用当成密文"的旧 bug 复发。
+    if (first.ct.length < 32) {
+      fail(`密文只有 ${first.ct.length} 字符（${JSON.stringify(first.ct)}），不可能是真密文：多半是又抽到了分块引用`);
+      continue;
+    }
+    if (first.ct.length % 4 !== 0 || !/^[A-Za-z0-9+/]+={0,2}$/.test(first.ct)) {
+      fail(`密文不是合法 base64（长度 ${first.ct.length}，前 20 字 ${JSON.stringify(first.ct.slice(0, 20))}）`);
+      continue;
     }
 
     const html = await decrypt([...unique.values()][0], password);

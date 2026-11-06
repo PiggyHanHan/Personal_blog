@@ -151,6 +151,65 @@ h1, h2, h3, h4 {
   padding-top: 1rem;
   border-top: 1px solid rgba(185, 146, 63, 0.25);
 }
+/* 侧边栏底部那枚神之眼（计划 9.1：点一下随机听一句胡桃台词）
+   父级 .sidebar__foot 是 column + center，所以这里只负责"按钮化 + Q 弹反馈" */
+.sidebar__vision-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+.sidebar__vision-btn {
+  display: block;
+  padding: 0.2rem;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0; /* 去掉 img 的基线缝隙 */
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+.sidebar__vision-btn:hover {
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}
+.sidebar__vision-btn:focus-visible {
+  outline: 2px solid var(--gold-3);
+  outline-offset: 2px;
+}
+/* 点下去 Q 弹一下（与 关于页胡桃玩偶的反馈同一种手感） */
+.sidebar__vision-btn--bounce {
+  animation: sidebar-vision-bounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes sidebar-vision-bounce {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.86) rotate(-6deg);
+  }
+  70% {
+    transform: scale(1.12) rotate(4deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+.sidebar__vision-hint {
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  opacity: 0.75;
+}
+/* 尊重"减弱动态效果"：不做 Q 弹（点还是有声音） */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar__vision-btn--bounce {
+    animation: none;
+  }
+  .sidebar__vision-btn:hover {
+    transform: none;
+  }
+}
 .sidebar__vision {
   width: 42px;
   height: 42px;
@@ -2048,10 +2107,246 @@ h1, h2, h3, h4 {
   }
 }
 
+/* ============================================================
+   互动层（计划 3.1 访客 · 3.4 点赞 · 3.5 卡片赞数 · 3.6 表情反应）
+   ------------------------------------------------------------
+   页面本身仍是静态产物：这层里的**每一个数字**都是客户端 hydrate 之后
+   从 /api/stats、/api/like 拉回来的，构建期产物里不存在任何计数。
+   ============================================================ */
+
+/* ---------- 侧边栏 · 旅人簿（3.1，验收意见 1：从页脚挪到这里） ---------- */
+.sidebar__visits {
+  margin-top: auto; /* 顶到导航下方、页脚装饰之上 */
+  padding: 0.85rem 0.2rem 0;
+  border-top: 1px solid rgba(185, 146, 63, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.sidebar__visits-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--crimson);
+  opacity: 0.85;
+}
+.visits--sidebar {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+/* 第一行：你是今日第 N 位旅人（比下面三行稍重一点） */
+.visits--sidebar .visits__ordinal {
+  line-height: 1.5;
+  color: var(--ink);
+}
+/* 下面三行：今日翻阅次数 / 历史来访旅人 / 历史翻阅次数
+   —— 每行都自带标签，不再是"一个孤零零的大数字不知道是哪个口径" */
+.visits--sidebar .visits__row {
+  line-height: 1.45;
+  opacity: 0.9;
+}
+.visits--sidebar strong {
+  color: var(--gold-3);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+/* 侧边栏里的占位/失败同样是那一行小字（.visits--quiet 在 globals.css） */
+.sidebar__visits .visits--quiet {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- 卡片右下角的赞数（3.5，验收意见 2：表情换神之眼 + 文字） ---------- */
+/* 纹章骑在卡片右下角（.quest-card > .sigil 向里伸约 34px），
+   所以底部这一行右侧要留出它的位置，别压在一起。
+   页面只有"阅读全文 →"时是左对齐的，加了赞数才变成两端对齐——不显示赞数时观感不变。 */
+.quest-card__foot {
+  padding-right: 4.4rem;
+}
+.quest-card__likes {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.26rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+/* 神之眼图标：**比文字略大**（验收第二轮："神之眼还是更大一点吧，不跟文字等高"）。
+   1.35em ≈ 22px（正文 16px 时）——两种状态用同一个尺寸，中心都落在这一行的竖直中线上，
+   所以普通态与热门态的神之眼是**对齐**的（热门态的火元素粒子画在宝石下面，不会把宝石糊掉、
+   也不会把视觉重心拽偏）。.intro-vision-wrap 是 FireVision 的外层（热门态用它），
+   普通态就是一张 <img>，两种都靠 1.35em 跟上字号。 */
+.quest-card__vision,
+.quest-card__vision.intro-vision-wrap {
+  width: 1.35em;
+  height: 1.35em;
+  flex: none;
+  object-fit: contain;
+  filter: drop-shadow(0 0 3px rgba(223, 192, 110, 0.55));
+}
+/* 热门（赞数过阈值）：神之眼冒火元素纹样——粒子按行内尺寸缩小，别糊出卡片 */
+.quest-card__likes--hot {
+  color: var(--crimson);
+  font-weight: 600;
+}
+.quest-card__likes--hot .quest-card__vision {
+  filter: drop-shadow(0 0 5px rgba(240, 150, 60, 0.85));
+}
+.quest-card__likes--hot .intro-vision {
+  width: 1.35em;
+  height: 1.35em;
+}
+.quest-card__likes--hot .intro-vision-glow {
+  transform: scale(0.85);
+}
+
+/* ---------- 文章标题下的互动统计（验收意见 3：只显示，不是入口） ---------- */
+.post-reactions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.1rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 146, 63, 0.3);
+  background: rgba(250, 246, 236, 0.6);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.post-reactions__label {
+  letter-spacing: 0.1em;
+  color: var(--crimson);
+  opacity: 0.9;
+}
+.post-reactions__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.16rem;
+}
+
+/* ---------- 单篇文章的阅读数（3.20）：标题下一枚只读徽章 ---------- */
+/* 用 <strong> 是为了语义（数字是重点），字号比周围小、颜色取低调金，
+   免得跟旁边那枚"读后留痕"徽章抢视线 —— 阅读数只是参照，不是主角。
+   数字用 tabular-nums：数字从 9 → 10 位时不会左右抖。 */
+.view-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 146, 63, 0.3);
+  background: rgba(250, 246, 236, 0.6);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.view-count__label {
+  letter-spacing: 0.1em;
+  color: var(--crimson);
+  opacity: 0.9;
+}
+.view-count__value {
+  color: var(--gold-3);
+  font-weight: 700;
+}
+/* 文末互动条里的那一枚：排在标题右边，比标题轻、比说明文字重 */
+.reactions__head .view-count--end {
+  font-size: 0.76rem;
+  background: rgba(250, 246, 236, 0.5);
+}
+
+/* ---------- 文末互动条（3.4 / 3.6） ---------- */
+.reactions {
+  margin-top: 2.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(189, 154, 68, 0.32);
+}
+.reactions__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.7rem;
+  margin-bottom: 0.75rem;
+}
+.reactions__title {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--crimson);
+}
+.reactions__intro {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.reactions__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.reactions__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.34rem 0.78rem;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 146, 63, 0.34);
+  background: rgba(250, 246, 236, 0.72);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+.reactions__btn:hover {
+  border-color: var(--gold-3);
+  transform: translateY(-1px);
+}
+/* 已点过：绯红描边（与文章标题同色系），再点一次就取消 */
+.reactions__btn[aria-pressed="true"] {
+  border-color: var(--crimson);
+  background: rgba(156, 39, 54, 0.1);
+  color: var(--crimson);
+  font-weight: 600;
+}
+.reactions__emoji {
+  font-size: 1rem;
+  line-height: 1;
+}
+.reactions__count {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.reactions__btn[aria-pressed="true"] .reactions__count {
+  color: inherit;
+}
+
+/* 小屏：纹章缩到 4rem，卡底留白同步收窄；互动按钮允许换行（拇指更好点） */
+@media (max-width: 640px) {
+  .quest-card__foot {
+    padding-right: 3.1rem;
+  }
+  .reactions__btn {
+    padding: 0.4rem 0.72rem;
+  }
+}
+
 /* 尊重"减弱动态效果"：关掉锁屏的装饰性循环动画（开门/收窗帘仍保留） */
 @media (prefers-reduced-motion: reduce) {
   .post-gate__scene {
     animation: none;
+  }
+  /* 互动按钮不做位移反馈（颜色变化保留） */
+  .reactions__btn:hover {
+    transform: none;
   }
 }
 

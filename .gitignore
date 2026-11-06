@@ -22,6 +22,9 @@
 .playwright-mcp/
 .reasonix/
 
+# ===== local-only workspace declaration (not for the public repo) =====
+/工作区声明.md
+
 # ===== auto-generated: compressed article images (built from content/md_images) =====
 /public/md_images/
 
@@ -33,6 +36,9 @@
 
 # ===== deployment packages (script-generated) =====
 *.tar.gz
+
+# ===== runtime data: 访客计数 / 点赞 / 表情（SQLite 落盘），构建期文章清单也在这 =====
+/data/
 
 # ===== OS junk =====
 .DS_Store

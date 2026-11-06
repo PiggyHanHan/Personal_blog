@@ -2,14 +2,18 @@
 
 import { useState } from "react";
 import { useVolume } from "@/components/providers/SoundProvider";
+import { SOUND_UI } from "@/lib/site";
 
 // ============================================================
-// 全局设置按钮：常驻左下角（开屏/博客页面都可见，z-index 高于开屏）
-// 目前只放音频设置（音量滑杆），以后可扩展其他设置项
+// 全局设置按钮：常驻右下角（开屏/博客页面都可见，z-index 高于开屏）
+//   · 音频音量滑杆
+//   · 胡桃语音总开关（计划 9.1 要求"必须带开关"）
+// ⚠️ 位置：globals.css 里写的是 left:16px，但 blog.css 末尾有一条覆盖把它挪到了右下角；
+//    返回顶部按钮（BackToTop）靠 right:72px 与它并排。改位置前先全局搜 .settings-wrap。
 // ============================================================
 
 export default function SettingsButton() {
-  const { volume, setVolume } = useVolume();
+  const { volume, setVolume, voiceEnabled, setVoiceEnabled } = useVolume();
   const [open, setOpen] = useState(false);
 
   return (
@@ -18,7 +22,7 @@ export default function SettingsButton() {
         type="button"
         className="settings-btn"
         onClick={() => setOpen((o) => !o)}
-        aria-label="设置"
+        aria-label={SOUND_UI.title}
         aria-expanded={open}
       >
         {/* 齿轮图标 */}
@@ -31,10 +35,11 @@ export default function SettingsButton() {
       </button>
 
       {open && (
-        <div className="settings-panel" role="dialog" aria-label="设置">
-          <h4 className="settings-panel__title">设置</h4>
+        <div className="settings-panel" role="dialog" aria-label={SOUND_UI.title}>
+          <h4 className="settings-panel__title">{SOUND_UI.title}</h4>
+
           <label className="settings-row">
-            <span className="settings-row__label">音频音量</span>
+            <span className="settings-row__label">{SOUND_UI.volumeLabel}</span>
             <input
               type="range"
               min="0"
@@ -42,11 +47,30 @@ export default function SettingsButton() {
               step="0.05"
               value={volume}
               onChange={(e) => setVolume(parseFloat(e.target.value))}
-              aria-label="音量"
+              aria-label={SOUND_UI.volumeLabel}
             />
             <span className="settings-row__value">{Math.round(volume * 100)}%</span>
           </label>
-          <p className="settings-panel__hint">作用于开屏音效与胡桃语音</p>
+
+          <div className="settings-row">
+            <span className="settings-row__label">{SOUND_UI.voiceLabel}</span>
+            {/* 拨动开关：role=switch 让读屏念得出"开/关" */}
+            <button
+              type="button"
+              role="switch"
+              aria-checked={voiceEnabled}
+              aria-label={SOUND_UI.voiceLabel}
+              className={`settings-switch${voiceEnabled ? " settings-switch--on" : ""}`}
+              onClick={() => setVoiceEnabled(!voiceEnabled)}
+            >
+              <span className="settings-switch__knob" aria-hidden />
+            </button>
+            <span className="settings-row__value">
+              {voiceEnabled ? SOUND_UI.voiceOn : SOUND_UI.voiceOff}
+            </span>
+          </div>
+
+          <p className="settings-panel__hint">{SOUND_UI.voiceHint}</p>
         </div>
       )}
     </div>
