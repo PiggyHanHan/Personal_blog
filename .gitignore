@@ -21,6 +21,7 @@
 .idea/
 .playwright-mcp/
 .reasonix/
+/.workbuddy/
 
 # ===== local-only workspace declaration (not for the public repo) =====
 /工作区声明.md
